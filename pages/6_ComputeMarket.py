@@ -532,8 +532,8 @@ with tab4:
     fig_energy.update_layout(
         title="Live Energy & Carbon Monitoring",
         xaxis_title="Time",
-        yaxis=dict(title="Power (W)", titlefont=dict(color="#e74c3c")),
-        yaxis2=dict(title="Carbon Intensity (gCO2/kWh)", titlefont=dict(color="#27ae60"), overlaying="y", side="right"),
+        yaxis=dict(title=dict(text="Power (W)", font=dict(color="#e74c3c"))),
+        yaxis2=dict(title=dict(text="Carbon Intensity (gCO2/kWh)", font=dict(color="#27ae60")), overlaying="y", side="right"),
         height=350,
         legend=dict(orientation="h", yanchor="bottom", y=1.02)
     )
