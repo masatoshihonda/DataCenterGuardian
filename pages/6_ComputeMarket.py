@@ -560,34 +560,45 @@ with tab4:
 st.markdown("---")
 st.header("Traction & Partnerships")
 
-st.markdown("""
-<div style="background-color: #f5f5f5; padding: 20px; border-radius: 10px;">
-    <h4 style="margin-top: 0;">Strong Early Traction with Public Institutions & Regulated Industries</h4>
+st.subheader("Strong Early Traction with Public Institutions & Regulated Industries")
 
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 15px;">
-        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #1A237E;">
-            <strong>Government of British Columbia</strong><br>
-            <span style="color: #666;">Public university consortium - Active PoCs around distributed research computing</span>
-        </div>
-        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #2e7d32;">
-            <strong>AIST (Japan)</strong><br>
-            <span style="color: #666;">World's largest quantum-AI data center - Use cases spanning quantum, AI, and energy</span>
-        </div>
-        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #f57c00;">
-            <strong>Global Relay (Canada)</strong><br>
-            <span style="color: #666;">Financial compliance - PoCs on verifiable computation and auditability</span>
-        </div>
-        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #7b1fa2;">
-            <strong>StrangeWorks + Hitachi</strong><br>
-            <span style="color: #666;">Joint proposals to energy infrastructure players</span>
-        </div>
+traction_col1, traction_col2 = st.columns(2)
+
+with traction_col1:
+    st.markdown("""
+    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #1A237E; margin-bottom: 15px;">
+        <strong>Government of British Columbia</strong><br>
+        <span style="color: #666;">Public university consortium - Active PoCs around distributed research computing</span>
     </div>
+    """, unsafe_allow_html=True)
 
-    <p style="margin-top: 20px; margin-bottom: 0; font-style: italic; color: #666;">
-        As quantum, edge, and distributed computing blur boundaries of jurisdiction, responsibility, and execution,
-        markets are not discovered—they are continuously created.
-    </p>
-</div>
+    st.markdown("""
+    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #f57c00; margin-bottom: 15px;">
+        <strong>Global Relay (Canada)</strong><br>
+        <span style="color: #666;">Financial compliance - PoCs on verifiable computation and auditability</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+with traction_col2:
+    st.markdown("""
+    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #2e7d32; margin-bottom: 15px;">
+        <strong>AIST (Japan)</strong><br>
+        <span style="color: #666;">World's largest quantum-AI data center - Use cases spanning quantum, AI, and energy</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #7b1fa2; margin-bottom: 15px;">
+        <strong>StrangeWorks + Hitachi</strong><br>
+        <span style="color: #666;">Joint proposals to energy infrastructure players</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("""
+<p style="margin-top: 10px; font-style: italic; color: #666;">
+    As quantum, edge, and distributed computing blur boundaries of jurisdiction, responsibility, and execution,
+    markets are not discovered—they are continuously created.
+</p>
 """, unsafe_allow_html=True)
 
 # Footer
