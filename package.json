@@ -1,0 +1,11 @@
+{
+  "name": "datacenterguardian",
+  "version": "1.0.0",
+  "description": "Data Center Monitoring Dashboard",
+  "scripts": {
+    "start": "npx serve -l 3000",
+    "dev": "npx serve -l 3000"
+  },
+  "keywords": ["datacenter", "monitoring", "dashboard"],
+  "license": "MIT"
+}
