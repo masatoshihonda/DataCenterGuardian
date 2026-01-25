@@ -291,7 +291,7 @@ with st.container():
         <div class="tool-card">
             <div class="tool-title">EdgeSync™ <span class="badge badge-ai">Trust</span></div>
             <p class="tool-description">
-                Patent-pending domain-restricted federated learning system that enables 
+                Patent-pending domain-restricted federated learning system that enables
                 cross-organization AI without compromising data sovereignty.
             </p>
             <div class="key-feature"><span class="feature-icon">✓</span> Domain-restricted inference</div>
@@ -299,9 +299,49 @@ with st.container():
             <div class="key-feature"><span class="feature-icon">✓</span> Cross-organizational knowledge sharing</div>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("Launch EdgeSync™", key="edgesync_btn", 
+        if st.button("Launch EdgeSync™", key="edgesync_btn",
                      use_container_width=True, type="primary"):
             st.switch_page("pages/5_EdgeSync.py")
+
+    # Spacer
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # Section 3: Compute Settlement & Market Infrastructure
+    st.markdown("<h2 class='category-header'><span class='category-icon'>🔗</span> Compute Settlement & Market Infrastructure</h2>", unsafe_allow_html=True)
+
+    market_col1, market_col2 = st.columns([2, 1])
+
+    with market_col1:
+        st.markdown("""
+        <div class="tool-card">
+            <div class="tool-title">ComputeMarket™ <span class="badge badge-infra">Settlement</span></div>
+            <p class="tool-description">
+                Industry-first settlement and verification layer for AI compute. Defines how computation
+                becomes verifiable, settleable, and energy-trusted across data centers and healthcare infrastructure.
+            </p>
+            <div class="key-feature"><span class="feature-icon">✓</span> Compute Work Unit (CWU) - new primitive for compute trading</div>
+            <div class="key-feature"><span class="feature-icon">✓</span> Energy-backed verification and receipts</div>
+            <div class="key-feature"><span class="feature-icon">✓</span> Settlement-grade telemetry for cross-boundary trust</div>
+            <div class="key-feature"><span class="feature-icon">✓</span> Healthcare & financial compliance ready</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("Launch ComputeMarket™", key="computemarket_btn",
+                     use_container_width=True, type="primary"):
+            st.switch_page("pages/6_ComputeMarket.py")
+
+    with market_col2:
+        st.markdown("""
+        <div style="background: linear-gradient(135deg, #1A237E 0%, #3949AB 100%); color: white; padding: 20px; border-radius: 10px; height: 100%;">
+            <h4 style="margin-top: 0; color: white;">Key Insight</h4>
+            <p style="font-size: 0.95rem; line-height: 1.6;">
+                <em>"We're not making AI faster.<br>We're making AI <strong>real</strong>."</em>
+            </p>
+            <p style="font-size: 0.85rem; margin-bottom: 0;">
+                Energy is the only non-fungible truth in AI compute. If compute is backed by energy,
+                it becomes verifiable. If it's verifiable, markets and regulation can exist.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
 
     # Spacer before footer
     st.markdown("<br><br>", unsafe_allow_html=True)
