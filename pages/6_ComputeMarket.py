@@ -8,32 +8,223 @@ from datetime import datetime, timedelta
 # Page configuration
 st.set_page_config(
     page_title="ComputeMarket - Settlement & Verification Layer",
-    page_icon="🔗",
+    page_icon="https://em-content.zobj.net/source/apple/391/chart-increasing_1f4c8.png",
     layout="wide"
 )
 
-# Sidebar
-st.sidebar.title("ComputeMarket")
-st.sidebar.info("""
-ComputeMarket defines how AI compute is verified, settled, and energy-trusted
-across data centers and healthcare infrastructure.
-
-**Key Concepts:**
-- Compute Work Unit (CWU)
-- Energy-backed verification
-- Settlement-grade telemetry
-- Cross-boundary compute trust
-""")
-
-# Main content
-st.title("ComputeMarket: Settlement & Verification Layer for AI Compute")
-
+# Modern CSS theme
 st.markdown("""
-<div style="border-left: 4px solid #1A237E; padding: 15px; background-color: #f0f4ff; margin-bottom: 20px;">
-    <h3 style="margin-top: 0; color: #1A237E;">Defining Verifiable, Settleable, Energy-Backed AI Compute</h3>
-    <p style="margin-bottom: 0;">
-        We're not making AI faster. We're making AI <strong>real</strong>—creating the conditions under which
-        AI can exist at scale by defining how compute becomes contractible, auditable, and trustworthy.
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --dark-gradient: linear-gradient(135deg, #0c1445 0%, #1a1a2e 50%, #16213e 100%);
+        --accent-pink: #f093fb;
+        --accent-green: #00d9a5;
+        --accent-blue: #667eea;
+    }
+
+    .stApp {
+        background: var(--dark-gradient);
+        font-family: 'Inter', sans-serif;
+    }
+
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, rgba(12, 20, 69, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    [data-testid="stSidebar"] .stMarkdown {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .page-header {
+        text-align: center;
+        padding: 2rem 0;
+        margin-bottom: 1rem;
+    }
+
+    .page-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, rgba(240, 147, 251, 0.2) 0%, rgba(240, 147, 251, 0.1) 100%);
+        border: 1px solid rgba(240, 147, 251, 0.3);
+        padding: 0.4rem 1.2rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        color: #f0abfc;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #ffffff 0%, #f0abfc 50%, #667eea 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.75rem;
+    }
+
+    .page-subtitle {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.7);
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .info-card {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .info-card-title {
+        color: #a78bfa;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-card-text {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .metric-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 1.25rem;
+        text-align: center;
+    }
+
+    .metric-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #00d9a5 0%, #667eea 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .metric-label {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 0.25rem;
+    }
+
+    .partner-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 0.75rem;
+        border-left: 3px solid;
+    }
+
+    .partner-card.blue { border-left-color: #667eea; }
+    .partner-card.green { border-left-color: #00d9a5; }
+    .partner-card.orange { border-left-color: #ff9a56; }
+    .partner-card.purple { border-left-color: #a78bfa; }
+
+    .partner-name {
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .partner-desc {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.85rem;
+        margin: 0;
+    }
+
+    .stTabs [data-baseweb="tab-list"] {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        background: transparent;
+        border-radius: 8px;
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 500;
+    }
+
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+        color: #ffffff;
+    }
+
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: #ffffff !important;
+    }
+
+    .stMarkdown p {
+        color: rgba(255, 255, 255, 0.8);
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Sidebar
+st.sidebar.markdown("""
+<div style="padding: 1rem 0;">
+    <h3 style="color: #f0abfc; margin-bottom: 1rem;">ComputeMarket</h3>
+    <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; line-height: 1.6;">
+        Defines how AI compute is verified, settled, and energy-trusted
+        across data centers and healthcare infrastructure.
+    </p>
+    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+        <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 0.5rem;">KEY CONCEPTS</p>
+        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 0.3rem 0;">&#8226; Compute Work Unit (CWU)</p>
+        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 0.3rem 0;">&#8226; Energy-backed verification</p>
+        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 0.3rem 0;">&#8226; Settlement-grade telemetry</p>
+        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 0.3rem 0;">&#8226; Cross-boundary compute trust</p>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# Page header
+st.markdown("""
+<div class="page-header">
+    <div class="page-badge">Settlement Layer</div>
+    <h1 class="page-title">ComputeMarket</h1>
+    <p class="page-subtitle">
+        We're not making AI faster. We're making AI <strong>real</strong>—defining how compute becomes
+        verifiable, settleable, and energy-trusted.
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -47,13 +238,13 @@ tab1, tab2, tab3, tab4 = st.tabs([
 ])
 
 with tab1:
-    st.header("Compute Work Unit (CWU) Definition")
+    st.markdown("<h2 style='color: #ffffff; font-size: 1.5rem;'>Compute Work Unit (CWU) Definition</h2>", unsafe_allow_html=True)
 
     st.markdown("""
-    <div style="background-color: #e8f5e9; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-        <h4 style="color: #2e7d32; margin-top: 0;">The New Primitive for AI Compute</h4>
-        <p style="font-size: 1.1em; margin-bottom: 0;">
-            A <strong>Compute Work Unit (CWU)</strong> is a completed computation task with verifiable energy backing—
+    <div class="info-card" style="background: linear-gradient(135deg, rgba(0, 217, 165, 0.1) 0%, rgba(0, 217, 165, 0.05) 100%); border-color: rgba(0, 217, 165, 0.2);">
+        <h4 class="info-card-title" style="color: #00d9a5;">The New Primitive for AI Compute</h4>
+        <p class="info-card-text">
+            A <strong style="color: #00d9a5;">Compute Work Unit (CWU)</strong> is a completed computation task with verifiable energy backing—
             turning compute from "usage" into "contractible work."
         </p>
     </div>
@@ -172,7 +363,8 @@ with tab1:
         height=250,
         xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-0.5, 4.5]),
         yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-0.2, 1.5]),
-        plot_bgcolor='white',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(255,255,255,0.02)',
         margin=dict(l=20, r=20, t=20, b=20)
     )
 
@@ -389,11 +581,14 @@ with tab3:
     ))
 
     fig_market.update_layout(
-        title="Market Evolution: GPU-Hours to CWU Settlement",
-        xaxis_title="Date",
-        yaxis_title="Market Share Index",
+        title=dict(text="Market Evolution: GPU-Hours to CWU Settlement", font=dict(color="white")),
+        xaxis=dict(title="Date", gridcolor="rgba(255,255,255,0.1)", color="rgba(255,255,255,0.7)"),
+        yaxis=dict(title="Market Share Index", gridcolor="rgba(255,255,255,0.1)", color="rgba(255,255,255,0.7)"),
         height=400,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5)
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, font=dict(color="white")),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(255,255,255,0.02)",
+        font=dict(color="rgba(255,255,255,0.8)")
     )
 
     st.plotly_chart(fig_market, use_container_width=True)
@@ -530,12 +725,15 @@ with tab4:
     ))
 
     fig_energy.update_layout(
-        title="Live Energy & Carbon Monitoring",
-        xaxis_title="Time",
-        yaxis=dict(title=dict(text="Power (W)", font=dict(color="#e74c3c"))),
-        yaxis2=dict(title=dict(text="Carbon Intensity (gCO2/kWh)", font=dict(color="#27ae60")), overlaying="y", side="right"),
+        title=dict(text="Live Energy & Carbon Monitoring", font=dict(color="white")),
+        xaxis=dict(title="Time", gridcolor="rgba(255,255,255,0.1)", color="rgba(255,255,255,0.7)"),
+        yaxis=dict(title=dict(text="Power (W)", font=dict(color="#f87171")), gridcolor="rgba(255,255,255,0.1)", color="rgba(255,255,255,0.7)"),
+        yaxis2=dict(title=dict(text="Carbon Intensity (gCO2/kWh)", font=dict(color="#00d9a5")), overlaying="y", side="right", color="rgba(255,255,255,0.7)"),
         height=350,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02)
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, font=dict(color="white")),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(255,255,255,0.02)",
+        font=dict(color="rgba(255,255,255,0.8)")
     )
 
     st.plotly_chart(fig_energy, use_container_width=True)
@@ -557,55 +755,61 @@ with tab4:
         st.metric("Total CO2", f"{total_co2:.2f} kg")
 
 # Traction section
-st.markdown("---")
-st.header("Traction & Partnerships")
-
-st.subheader("Strong Early Traction with Public Institutions & Regulated Industries")
+st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
+st.markdown("""
+<div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+    <h2 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 0.5rem;">Traction & Partnerships</h2>
+    <p style="color: rgba(255,255,255,0.6); margin-bottom: 1.5rem;">Strong Early Traction with Public Institutions & Regulated Industries</p>
+</div>
+""", unsafe_allow_html=True)
 
 traction_col1, traction_col2 = st.columns(2)
 
 with traction_col1:
     st.markdown("""
-    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #1A237E; margin-bottom: 15px;">
-        <strong>Government of British Columbia</strong><br>
-        <span style="color: #666;">Public university consortium - Active PoCs around distributed research computing</span>
+    <div class="partner-card blue">
+        <p class="partner-name">Government of British Columbia</p>
+        <p class="partner-desc">Public university consortium - Active PoCs around distributed research computing</p>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("""
-    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #f57c00; margin-bottom: 15px;">
-        <strong>Global Relay (Canada)</strong><br>
-        <span style="color: #666;">Financial compliance - PoCs on verifiable computation and auditability</span>
+    <div class="partner-card orange">
+        <p class="partner-name">Global Relay (Canada)</p>
+        <p class="partner-desc">Financial compliance - PoCs on verifiable computation and auditability</p>
     </div>
     """, unsafe_allow_html=True)
 
 with traction_col2:
     st.markdown("""
-    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #2e7d32; margin-bottom: 15px;">
-        <strong>AIST (Japan)</strong><br>
-        <span style="color: #666;">World's largest quantum-AI data center - Use cases spanning quantum, AI, and energy</span>
+    <div class="partner-card green">
+        <p class="partner-name">AIST (Japan)</p>
+        <p class="partner-desc">World's largest quantum-AI data center - Use cases spanning quantum, AI, and energy</p>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("""
-    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #7b1fa2; margin-bottom: 15px;">
-        <strong>StrangeWorks + Hitachi</strong><br>
-        <span style="color: #666;">Joint proposals to energy infrastructure players</span>
+    <div class="partner-card purple">
+        <p class="partner-name">StrangeWorks + Hitachi</p>
+        <p class="partner-desc">Joint proposals to energy infrastructure players</p>
     </div>
     """, unsafe_allow_html=True)
 
 st.markdown("""
-<p style="margin-top: 10px; font-style: italic; color: #666;">
+<p style="margin-top: 1rem; font-style: italic; color: rgba(255,255,255,0.5); text-align: center;">
     As quantum, edge, and distributed computing blur boundaries of jurisdiction, responsibility, and execution,
     markets are not discovered—they are continuously created.
 </p>
 """, unsafe_allow_html=True)
 
 # Footer
-st.markdown("---")
 st.markdown("""
-<div style="text-align: center; color: #666; font-size: 0.9em;">
-    <p><strong>ComputeMarket</strong> — Defining how AI compute becomes verifiable, settleable, and trustworthy.</p>
-    <p style="font-size: 0.8em;">Part of the Prefrontal™ platform | Patent-pending technology</p>
+<div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+    <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin-bottom: 0.5rem;">
+        <strong style="color: #f0abfc;">ComputeMarket</strong> — Defining how AI compute becomes verifiable, settleable, and trustworthy.
+    </p>
+    <p style="color: rgba(255,255,255,0.4); font-size: 0.8rem;">
+        Part of the Prefrontal platform | Patent-pending technology
+    </p>
 </div>
 """, unsafe_allow_html=True)
