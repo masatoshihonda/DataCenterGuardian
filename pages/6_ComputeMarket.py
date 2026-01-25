@@ -355,8 +355,9 @@ with tab3:
         "energy_backed_compute": np.arange(len(dates)) * 3 + np.random.normal(0, 4, len(dates))
     })
 
-    # Ensure no negative values
-    market_data = market_data.clip(lower=0)
+    # Ensure no negative values (only for numeric columns)
+    numeric_cols = ["traditional_gpu_hours", "cwu_settlements", "energy_backed_compute"]
+    market_data[numeric_cols] = market_data[numeric_cols].clip(lower=0)
 
     fig_market = go.Figure()
 
