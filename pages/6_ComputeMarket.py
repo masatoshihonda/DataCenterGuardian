@@ -12,21 +12,25 @@ st.set_page_config(
     layout="wide"
 )
 
-# Modern CSS theme
+# Modern CSS theme - White/Light
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
     :root {
-        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --dark-gradient: linear-gradient(135deg, #0c1445 0%, #1a1a2e 50%, #16213e 100%);
-        --accent-pink: #f093fb;
-        --accent-green: #00d9a5;
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8f9fc;
+        --text-primary: #1a1a2e;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
         --accent-blue: #667eea;
+        --accent-purple: #764ba2;
+        --accent-green: #10b981;
+        --accent-pink: #ec4899;
     }
 
     .stApp {
-        background: var(--dark-gradient);
+        background: var(--bg-secondary);
         font-family: 'Inter', sans-serif;
     }
 
@@ -35,36 +39,39 @@ st.markdown("""
     header {visibility: hidden;}
 
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, rgba(12, 20, 69, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        background: #ffffff;
+        border-right: 1px solid var(--border-color);
     }
 
     [data-testid="stSidebar"] .stMarkdown {
-        color: rgba(255, 255, 255, 0.8);
+        color: var(--text-secondary);
     }
 
     .page-header {
         text-align: center;
         padding: 2rem 0;
         margin-bottom: 1rem;
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1px solid var(--border-color);
     }
 
     .page-badge {
         display: inline-block;
-        background: linear-gradient(135deg, rgba(240, 147, 251, 0.2) 0%, rgba(240, 147, 251, 0.1) 100%);
-        border: 1px solid rgba(240, 147, 251, 0.3);
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(236, 72, 153, 0.05) 100%);
+        border: 1px solid rgba(236, 72, 153, 0.2);
         padding: 0.4rem 1.2rem;
         border-radius: 50px;
         font-size: 0.8rem;
-        color: #f0abfc;
-        font-weight: 500;
+        color: #db2777;
+        font-weight: 600;
         margin-bottom: 1rem;
     }
 
     .page-title {
         font-size: 2.5rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #ffffff 0%, #f0abfc 50%, #667eea 100%);
+        background: linear-gradient(135deg, #1a1a2e 0%, #667eea 50%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -73,46 +80,46 @@ st.markdown("""
 
     .page-subtitle {
         font-size: 1.1rem;
-        color: rgba(255, 255, 255, 0.7);
+        color: var(--text-secondary);
         max-width: 700px;
         margin: 0 auto;
         line-height: 1.6;
     }
 
     .info-card {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-        border: 1px solid rgba(102, 126, 234, 0.2);
+        background: #ffffff;
+        border: 1px solid var(--border-color);
         border-radius: 16px;
         padding: 1.5rem;
         margin: 1.5rem 0;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
     .info-card-title {
-        color: #a78bfa;
+        color: #059669;
         font-size: 1.1rem;
         font-weight: 600;
         margin-bottom: 0.5rem;
     }
 
     .info-card-text {
-        color: rgba(255, 255, 255, 0.8);
+        color: var(--text-secondary);
         font-size: 1rem;
         line-height: 1.6;
         margin: 0;
     }
 
     .glass-panel {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
+        background: #ffffff;
         border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border-color);
         padding: 1.5rem;
         margin-bottom: 1rem;
     }
 
     .metric-card {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: #ffffff;
+        border: 1px solid var(--border-color);
         border-radius: 12px;
         padding: 1.25rem;
         text-align: center;
@@ -121,63 +128,73 @@ st.markdown("""
     .metric-value {
         font-size: 1.8rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #00d9a5 0%, #667eea 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
     .metric-label {
         font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.5);
+        color: var(--text-secondary);
         text-transform: uppercase;
         letter-spacing: 0.5px;
         margin-top: 0.25rem;
     }
 
     .partner-card {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: #ffffff;
+        border: 1px solid var(--border-color);
         border-radius: 12px;
         padding: 1rem 1.25rem;
         margin-bottom: 0.75rem;
         border-left: 3px solid;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
     .partner-card.blue { border-left-color: #667eea; }
-    .partner-card.green { border-left-color: #00d9a5; }
-    .partner-card.orange { border-left-color: #ff9a56; }
-    .partner-card.purple { border-left-color: #a78bfa; }
+    .partner-card.green { border-left-color: #10b981; }
+    .partner-card.orange { border-left-color: #f59e0b; }
+    .partner-card.purple { border-left-color: #8b5cf6; }
 
     .partner-name {
-        color: #ffffff;
+        color: var(--text-primary);
         font-weight: 600;
         font-size: 0.95rem;
         margin-bottom: 0.25rem;
     }
 
     .partner-desc {
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--text-secondary);
         font-size: 0.85rem;
         margin: 0;
     }
 
     .stTabs [data-baseweb="tab-list"] {
-        background: rgba(255, 255, 255, 0.03);
+        background: #ffffff;
         border-radius: 12px;
         padding: 0.5rem;
         gap: 0.5rem;
+        border: 1px solid var(--border-color);
     }
 
     .stTabs [data-baseweb="tab"] {
         background: transparent;
         border-radius: 8px;
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--text-secondary);
         font-weight: 500;
     }
 
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
-        color: #ffffff;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        color: #667eea;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--text-primary) !important;
+    }
+
+    .stMarkdown p {
+        color: var(--text-secondary);
     }
 
     .stButton > button {
@@ -202,17 +219,17 @@ st.markdown("""
 # Sidebar
 st.sidebar.markdown("""
 <div style="padding: 1rem 0;">
-    <h3 style="color: #f0abfc; margin-bottom: 1rem;">ComputeMarket</h3>
-    <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; line-height: 1.6;">
+    <h3 style="color: #667eea; margin-bottom: 1rem;">ComputeMarket</h3>
+    <p style="color: #64748b; font-size: 0.9rem; line-height: 1.6;">
         Defines how AI compute is verified, settled, and energy-trusted
         across data centers and healthcare infrastructure.
     </p>
-    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
-        <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 0.5rem;">KEY CONCEPTS</p>
-        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 0.3rem 0;">&#8226; Compute Work Unit (CWU)</p>
-        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 0.3rem 0;">&#8226; Energy-backed verification</p>
-        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 0.3rem 0;">&#8226; Settlement-grade telemetry</p>
-        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 0.3rem 0;">&#8226; Cross-boundary compute trust</p>
+    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+        <p style="color: #94a3b8; font-size: 0.8rem; margin-bottom: 0.5rem;">KEY CONCEPTS</p>
+        <p style="color: #64748b; font-size: 0.85rem; margin: 0.3rem 0;">&#8226; Compute Work Unit (CWU)</p>
+        <p style="color: #64748b; font-size: 0.85rem; margin: 0.3rem 0;">&#8226; Energy-backed verification</p>
+        <p style="color: #64748b; font-size: 0.85rem; margin: 0.3rem 0;">&#8226; Settlement-grade telemetry</p>
+        <p style="color: #64748b; font-size: 0.85rem; margin: 0.3rem 0;">&#8226; Cross-boundary compute trust</p>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -223,7 +240,7 @@ st.markdown("""
     <div class="page-badge">Settlement Layer</div>
     <h1 class="page-title">ComputeMarket</h1>
     <p class="page-subtitle">
-        We're not making AI faster. We're making AI <strong>real</strong>—defining how compute becomes
+        We're not making AI faster. We're making AI <strong style="color: #1a1a2e;">real</strong>—defining how compute becomes
         verifiable, settleable, and energy-trusted.
     </p>
 </div>
@@ -364,7 +381,7 @@ with tab1:
         xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-0.5, 4.5]),
         yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-0.2, 1.5]),
         paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(255,255,255,0.02)',
+        plot_bgcolor='#ffffff',
         margin=dict(l=20, r=20, t=20, b=20)
     )
 
@@ -581,14 +598,14 @@ with tab3:
     ))
 
     fig_market.update_layout(
-        title=dict(text="Market Evolution: GPU-Hours to CWU Settlement", font=dict(color="white")),
-        xaxis=dict(title="Date", gridcolor="rgba(255,255,255,0.1)", color="rgba(255,255,255,0.7)"),
-        yaxis=dict(title="Market Share Index", gridcolor="rgba(255,255,255,0.1)", color="rgba(255,255,255,0.7)"),
+        title=dict(text="Market Evolution: GPU-Hours to CWU Settlement", font=dict(color="#1a1a2e")),
+        xaxis=dict(title="Date", gridcolor="#e2e8f0", color="#64748b"),
+        yaxis=dict(title="Market Share Index", gridcolor="#e2e8f0", color="#64748b"),
         height=400,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, font=dict(color="white")),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, font=dict(color="#1a1a2e")),
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(255,255,255,0.02)",
-        font=dict(color="rgba(255,255,255,0.8)")
+        plot_bgcolor="#ffffff",
+        font=dict(color="#64748b")
     )
 
     st.plotly_chart(fig_market, use_container_width=True)
@@ -725,15 +742,15 @@ with tab4:
     ))
 
     fig_energy.update_layout(
-        title=dict(text="Live Energy & Carbon Monitoring", font=dict(color="white")),
-        xaxis=dict(title="Time", gridcolor="rgba(255,255,255,0.1)", color="rgba(255,255,255,0.7)"),
-        yaxis=dict(title=dict(text="Power (W)", font=dict(color="#f87171")), gridcolor="rgba(255,255,255,0.1)", color="rgba(255,255,255,0.7)"),
-        yaxis2=dict(title=dict(text="Carbon Intensity (gCO2/kWh)", font=dict(color="#00d9a5")), overlaying="y", side="right", color="rgba(255,255,255,0.7)"),
+        title=dict(text="Live Energy & Carbon Monitoring", font=dict(color="#1a1a2e")),
+        xaxis=dict(title="Time", gridcolor="#e2e8f0", color="#64748b"),
+        yaxis=dict(title=dict(text="Power (W)", font=dict(color="#ef4444")), gridcolor="#e2e8f0", color="#64748b"),
+        yaxis2=dict(title=dict(text="Carbon Intensity (gCO2/kWh)", font=dict(color="#10b981")), overlaying="y", side="right", color="#64748b"),
         height=350,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, font=dict(color="white")),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, font=dict(color="#1a1a2e")),
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(255,255,255,0.02)",
-        font=dict(color="rgba(255,255,255,0.8)")
+        plot_bgcolor="#ffffff",
+        font=dict(color="#64748b")
     )
 
     st.plotly_chart(fig_energy, use_container_width=True)
@@ -757,9 +774,9 @@ with tab4:
 # Traction section
 st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
 st.markdown("""
-<div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
-    <h2 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 0.5rem;">Traction & Partnerships</h2>
-    <p style="color: rgba(255,255,255,0.6); margin-bottom: 1.5rem;">Strong Early Traction with Public Institutions & Regulated Industries</p>
+<div style="border-top: 1px solid #e2e8f0; padding-top: 2rem;">
+    <h2 style="color: #1a1a2e; font-size: 1.5rem; margin-bottom: 0.5rem;">Traction & Partnerships</h2>
+    <p style="color: #64748b; margin-bottom: 1.5rem;">Strong Early Traction with Public Institutions & Regulated Industries</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -796,7 +813,7 @@ with traction_col2:
     """, unsafe_allow_html=True)
 
 st.markdown("""
-<p style="margin-top: 1rem; font-style: italic; color: rgba(255,255,255,0.5); text-align: center;">
+<p style="margin-top: 1rem; font-style: italic; color: #94a3b8; text-align: center;">
     As quantum, edge, and distributed computing blur boundaries of jurisdiction, responsibility, and execution,
     markets are not discovered—they are continuously created.
 </p>
@@ -804,11 +821,11 @@ st.markdown("""
 
 # Footer
 st.markdown("""
-<div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
-    <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin-bottom: 0.5rem;">
-        <strong style="color: #f0abfc;">ComputeMarket</strong> — Defining how AI compute becomes verifiable, settleable, and trustworthy.
+<div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #e2e8f0; text-align: center;">
+    <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 0.5rem;">
+        <strong style="color: #667eea;">ComputeMarket</strong> — Defining how AI compute becomes verifiable, settleable, and trustworthy.
     </p>
-    <p style="color: rgba(255,255,255,0.4); font-size: 0.8rem;">
+    <p style="color: #94a3b8; font-size: 0.8rem;">
         Part of the Prefrontal platform | Patent-pending technology
     </p>
 </div>

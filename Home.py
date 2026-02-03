@@ -8,7 +8,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Modern CSS with glassmorphism, gradients, and animations
+# Modern CSS with clean white theme
 st.markdown("""
 <style>
     /* Import modern font */
@@ -17,22 +17,22 @@ st.markdown("""
     /* Root variables for theming */
     :root {
         --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        --dark-gradient: linear-gradient(135deg, #0c1445 0%, #1a1a2e 50%, #16213e 100%);
-        --glass-bg: rgba(255, 255, 255, 0.05);
-        --glass-border: rgba(255, 255, 255, 0.1);
-        --text-primary: #ffffff;
-        --text-secondary: rgba(255, 255, 255, 0.7);
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8f9fc;
+        --bg-card: #ffffff;
+        --text-primary: #1a1a2e;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
         --accent-blue: #667eea;
         --accent-purple: #764ba2;
         --accent-pink: #f093fb;
-        --accent-green: #00d9a5;
-        --accent-orange: #ff9a56;
+        --accent-green: #10b981;
+        --accent-orange: #f59e0b;
     }
 
     /* Global styles */
     .stApp {
-        background: var(--dark-gradient);
+        background: var(--bg-secondary);
         font-family: 'Inter', sans-serif;
     }
 
@@ -43,12 +43,12 @@ st.markdown("""
 
     /* Sidebar styling */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, rgba(12, 20, 69, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        background: #ffffff;
+        border-right: 1px solid var(--border-color);
     }
 
     [data-testid="stSidebar"] .stMarkdown {
-        color: rgba(255, 255, 255, 0.8);
+        color: var(--text-secondary);
     }
 
     /* Hero section */
@@ -56,26 +56,29 @@ st.markdown("""
         text-align: center;
         padding: 3rem 2rem;
         margin-bottom: 2rem;
+        background: #ffffff;
+        border-radius: 24px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
 
     .hero-badge {
         display: inline-block;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
-        border: 1px solid rgba(102, 126, 234, 0.3);
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        border: 1px solid rgba(102, 126, 234, 0.2);
         padding: 0.5rem 1.5rem;
         border-radius: 50px;
         font-size: 0.85rem;
-        color: #a78bfa;
-        font-weight: 500;
+        color: #667eea;
+        font-weight: 600;
         letter-spacing: 0.5px;
         margin-bottom: 1.5rem;
-        backdrop-filter: blur(10px);
     }
 
     .hero-title {
         font-size: 3.5rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #ffffff 0%, #a78bfa 50%, #667eea 100%);
+        background: linear-gradient(135deg, #1a1a2e 0%, #667eea 50%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -86,7 +89,7 @@ st.markdown("""
 
     .hero-subtitle {
         font-size: 1.3rem;
-        color: rgba(255, 255, 255, 0.7);
+        color: var(--text-secondary);
         max-width: 700px;
         margin: 0 auto 2rem;
         line-height: 1.6;
@@ -109,7 +112,7 @@ st.markdown("""
     .stat-value {
         font-size: 2.5rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #00d9a5 0%, #667eea 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -117,7 +120,7 @@ st.markdown("""
 
     .stat-label {
         font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.5);
+        color: var(--text-secondary);
         text-transform: uppercase;
         letter-spacing: 1px;
         margin-top: 0.25rem;
@@ -127,72 +130,61 @@ st.markdown("""
     .section-header {
         display: flex;
         align-items: center;
-        margin: 3rem 0 1.5rem;
+        margin: 2.5rem 0 1.5rem;
         padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid var(--border-color);
     }
 
     .section-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-right: 1rem;
-        font-size: 1.2rem;
+        font-size: 1.3rem;
     }
 
     .section-icon.infra {
-        background: linear-gradient(135deg, rgba(0, 217, 165, 0.2) 0%, rgba(0, 217, 165, 0.1) 100%);
-        border: 1px solid rgba(0, 217, 165, 0.3);
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+        border: 1px solid rgba(16, 185, 129, 0.2);
     }
 
     .section-icon.trust {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(102, 126, 234, 0.1) 100%);
-        border: 1px solid rgba(102, 126, 234, 0.3);
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(102, 126, 234, 0.05) 100%);
+        border: 1px solid rgba(102, 126, 234, 0.2);
     }
 
     .section-icon.market {
-        background: linear-gradient(135deg, rgba(240, 147, 251, 0.2) 0%, rgba(240, 147, 251, 0.1) 100%);
-        border: 1px solid rgba(240, 147, 251, 0.3);
+        background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(240, 147, 251, 0.05) 100%);
+        border: 1px solid rgba(240, 147, 251, 0.2);
     }
 
     .section-title {
         font-size: 1.5rem;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--text-primary);
         margin: 0;
     }
 
-    /* Modern glass cards */
+    /* Modern cards */
     .glass-card {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        background: #ffffff;
         border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border-color);
         padding: 1.75rem;
         height: 100%;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
-    }
-
-    .glass-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
     .glass-card:hover {
-        transform: translateY(-8px);
-        border-color: rgba(255, 255, 255, 0.15);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px -15px rgba(102, 126, 234, 0.2);
+        border-color: rgba(102, 126, 234, 0.3);
     }
 
     .card-icon {
@@ -207,34 +199,34 @@ st.markdown("""
     }
 
     .card-icon.green {
-        background: linear-gradient(135deg, rgba(0, 217, 165, 0.2) 0%, rgba(0, 217, 165, 0.05) 100%);
-        border: 1px solid rgba(0, 217, 165, 0.3);
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+        border: 1px solid rgba(16, 185, 129, 0.2);
     }
 
     .card-icon.blue {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(102, 126, 234, 0.05) 100%);
-        border: 1px solid rgba(102, 126, 234, 0.3);
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(102, 126, 234, 0.05) 100%);
+        border: 1px solid rgba(102, 126, 234, 0.2);
     }
 
     .card-icon.purple {
-        background: linear-gradient(135deg, rgba(167, 139, 250, 0.2) 0%, rgba(167, 139, 250, 0.05) 100%);
-        border: 1px solid rgba(167, 139, 250, 0.3);
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 100%);
+        border: 1px solid rgba(139, 92, 246, 0.2);
     }
 
     .card-icon.pink {
-        background: linear-gradient(135deg, rgba(240, 147, 251, 0.2) 0%, rgba(240, 147, 251, 0.05) 100%);
-        border: 1px solid rgba(240, 147, 251, 0.3);
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(236, 72, 153, 0.05) 100%);
+        border: 1px solid rgba(236, 72, 153, 0.2);
     }
 
     .card-icon.orange {
-        background: linear-gradient(135deg, rgba(255, 154, 86, 0.2) 0%, rgba(255, 154, 86, 0.05) 100%);
-        border: 1px solid rgba(255, 154, 86, 0.3);
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+        border: 1px solid rgba(245, 158, 11, 0.2);
     }
 
     .card-title {
         font-size: 1.25rem;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--text-primary);
         margin-bottom: 0.75rem;
         display: flex;
         align-items: center;
@@ -251,25 +243,25 @@ st.markdown("""
     }
 
     .badge-infra {
-        background: rgba(0, 217, 165, 0.15);
-        color: #00d9a5;
-        border: 1px solid rgba(0, 217, 165, 0.3);
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+        border: 1px solid rgba(16, 185, 129, 0.2);
     }
 
     .badge-trust {
-        background: rgba(102, 126, 234, 0.15);
-        color: #818cf8;
-        border: 1px solid rgba(102, 126, 234, 0.3);
+        background: rgba(102, 126, 234, 0.1);
+        color: #667eea;
+        border: 1px solid rgba(102, 126, 234, 0.2);
     }
 
     .badge-market {
-        background: rgba(240, 147, 251, 0.15);
-        color: #f0abfc;
-        border: 1px solid rgba(240, 147, 251, 0.3);
+        background: rgba(236, 72, 153, 0.1);
+        color: #db2777;
+        border: 1px solid rgba(236, 72, 153, 0.2);
     }
 
     .card-description {
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--text-secondary);
         font-size: 0.95rem;
         line-height: 1.6;
         margin-bottom: 1.25rem;
@@ -284,14 +276,14 @@ st.markdown("""
     .card-feature {
         display: flex;
         align-items: center;
-        color: rgba(255, 255, 255, 0.7);
+        color: var(--text-secondary);
         font-size: 0.9rem;
         margin-bottom: 0.6rem;
     }
 
     .feature-check {
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -301,67 +293,56 @@ st.markdown("""
     }
 
     .feature-check.green {
-        background: rgba(0, 217, 165, 0.2);
-        color: #00d9a5;
+        background: rgba(16, 185, 129, 0.15);
+        color: #059669;
     }
 
     .feature-check.blue {
-        background: rgba(102, 126, 234, 0.2);
-        color: #818cf8;
+        background: rgba(102, 126, 234, 0.15);
+        color: #667eea;
     }
 
     .feature-check.pink {
-        background: rgba(240, 147, 251, 0.2);
-        color: #f0abfc;
+        background: rgba(236, 72, 153, 0.15);
+        color: #db2777;
     }
 
     /* Highlight card */
     .highlight-card {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-        border: 1px solid rgba(102, 126, 234, 0.2);
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+        border: 1px solid rgba(102, 126, 234, 0.15);
         border-radius: 20px;
         padding: 2rem;
         position: relative;
         overflow: hidden;
     }
 
-    .highlight-card::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
-    }
-
     .highlight-quote {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         font-weight: 600;
-        color: #ffffff;
+        color: var(--text-primary);
         font-style: italic;
         margin-bottom: 1rem;
-        position: relative;
+        line-height: 1.4;
     }
 
     .highlight-text {
-        color: rgba(255, 255, 255, 0.7);
+        color: var(--text-secondary);
         font-size: 0.95rem;
         line-height: 1.6;
-        position: relative;
     }
 
     /* Problem statement */
     .problem-card {
-        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
-        border: 1px solid rgba(239, 68, 68, 0.2);
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.02) 100%);
+        border: 1px solid rgba(239, 68, 68, 0.15);
         border-radius: 16px;
         padding: 1.5rem;
-        margin: 2rem 0;
+        margin: 1.5rem 0;
     }
 
     .problem-label {
-        color: #f87171;
+        color: #dc2626;
         font-weight: 600;
         font-size: 0.85rem;
         text-transform: uppercase;
@@ -370,7 +351,7 @@ st.markdown("""
     }
 
     .problem-text {
-        color: rgba(255, 255, 255, 0.8);
+        color: var(--text-secondary);
         font-size: 1rem;
         line-height: 1.7;
         margin: 0;
@@ -386,45 +367,30 @@ st.markdown("""
         font-weight: 600 !important;
         font-size: 0.95rem !important;
         transition: all 0.3s ease !important;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25) !important;
     }
 
     .stButton > button:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.35) !important;
     }
 
     /* Footer */
     .footer {
         text-align: center;
         padding: 3rem 0 2rem;
-        margin-top: 4rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 3rem;
+        border-top: 1px solid var(--border-color);
     }
 
     .footer-text {
-        color: rgba(255, 255, 255, 0.4);
+        color: var(--text-secondary);
         font-size: 0.85rem;
     }
 
     .footer-brand {
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--text-primary);
         font-weight: 600;
-    }
-
-    /* Animations */
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-    }
-
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
-    }
-
-    .animate-float {
-        animation: float 6s ease-in-out infinite;
     }
 
     /* Responsive adjustments */
