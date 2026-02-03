@@ -450,7 +450,7 @@ with tab2:
     settlement_data = pd.DataFrame({
         "cwu_id": [f"CWU-{i:06d}" for i in range(n_settlements)],
         "job_type": np.random.choice(["ML Training", "Inference", "Fine-tuning", "Data Processing"], n_settlements),
-        "provider": np.random.choice(["DC-West", "DC-East", "DC-Central", "Partner-A"], n_settlements),
+        "provider": np.random.choice(["AIST-Tsukuba", "BC-Canada", "Global-Relay", "StrangeWorks"], n_settlements),
         "buyer": np.random.choice(["HealthCorp", "FinanceAI", "ResearchLab", "TechStartup"], n_settlements),
         "energy_kwh": np.random.uniform(1, 50, n_settlements).round(2),
         "co2_kg": np.random.uniform(0.1, 5, n_settlements).round(2),
