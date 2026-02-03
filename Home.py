@@ -393,6 +393,21 @@ st.markdown("""
         font-weight: 600;
     }
 
+    /* Force all text to be properly colored */
+    h1, h2, h3, h4, h5, h6,
+    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4,
+    [data-testid="stHeader"], [data-testid="stSubheader"] {
+        color: #1a1a2e !important;
+    }
+
+    .stMarkdown, .stMarkdown p, .stMarkdown li {
+        color: #64748b !important;
+    }
+
+    .stMarkdown strong, .stMarkdown b {
+        color: #1a1a2e !important;
+    }
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .hero-title {

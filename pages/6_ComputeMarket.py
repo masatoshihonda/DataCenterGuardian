@@ -189,12 +189,28 @@ st.markdown("""
         color: #667eea;
     }
 
-    h1, h2, h3, h4, h5, h6 {
-        color: var(--text-primary) !important;
+    /* Force all text to be dark */
+    h1, h2, h3, h4, h5, h6,
+    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4,
+    [data-testid="stHeader"], [data-testid="stSubheader"] {
+        color: #1a1a2e !important;
     }
 
-    .stMarkdown p {
-        color: var(--text-secondary);
+    .stMarkdown, .stMarkdown p, .stMarkdown li, .stMarkdown span {
+        color: #64748b !important;
+    }
+
+    .stMarkdown strong, .stMarkdown b {
+        color: #1a1a2e !important;
+    }
+
+    /* Fix metric text colors */
+    [data-testid="stMetricValue"] {
+        color: #667eea !important;
+    }
+
+    [data-testid="stMetricLabel"] {
+        color: #64748b !important;
     }
 
     .stButton > button {
@@ -255,13 +271,13 @@ tab1, tab2, tab3, tab4 = st.tabs([
 ])
 
 with tab1:
-    st.markdown("<h2 style='color: #ffffff; font-size: 1.5rem;'>Compute Work Unit (CWU) Definition</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #1a1a2e; font-size: 1.5rem; font-weight: 700;'>Compute Work Unit (CWU) Definition</h2>", unsafe_allow_html=True)
 
     st.markdown("""
-    <div class="info-card" style="background: linear-gradient(135deg, rgba(0, 217, 165, 0.1) 0%, rgba(0, 217, 165, 0.05) 100%); border-color: rgba(0, 217, 165, 0.2);">
-        <h4 class="info-card-title" style="color: #00d9a5;">The New Primitive for AI Compute</h4>
-        <p class="info-card-text">
-            A <strong style="color: #00d9a5;">Compute Work Unit (CWU)</strong> is a completed computation task with verifiable energy backing—
+    <div class="info-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%); border-color: rgba(16, 185, 129, 0.2);">
+        <h4 class="info-card-title" style="color: #059669;">The New Primitive for AI Compute</h4>
+        <p class="info-card-text" style="color: #64748b;">
+            A <strong style="color: #059669;">Compute Work Unit (CWU)</strong> is a completed computation task with verifiable energy backing—
             turning compute from "usage" into "contractible work."
         </p>
     </div>
