@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataCenterGuardian - Monitoring Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="logo">🛡️</span>
+            <h1>DataCenterGuardian</h1>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="active">Dashboard</a>
+            <a href="#">Servers</a>
+            <a href="#">Alerts</a>
+            <a href="#">Reports</a>
+            <a href="#">Settings</a>
+        </div>
+        <div class="nav-status">
+            <span class="status-indicator online"></span>
+            <span>All Systems Operational</span>
+        </div>
+    </nav>
+
+    <main class="dashboard">
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon servers">🖥️</div>
+                <div class="stat-info">
+                    <h3>Total Servers</h3>
+                    <p class="stat-value" id="total-servers">128</p>
+                    <span class="stat-change positive">+4 this month</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon uptime">⚡</div>
+                <div class="stat-info">
+                    <h3>Uptime</h3>
+                    <p class="stat-value" id="uptime">99.97%</p>
+                    <span class="stat-change positive">+0.02% vs last month</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon alerts">🔔</div>
+                <div class="stat-info">
+                    <h3>Active Alerts</h3>
+                    <p class="stat-value warning" id="alerts">3</p>
+                    <span class="stat-change negative">2 critical</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon cpu">📊</div>
+                <div class="stat-info">
+                    <h3>Avg CPU Usage</h3>
+                    <p class="stat-value" id="cpu-usage">42%</p>
+                    <span class="stat-change neutral">Normal load</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="main-content">
+            <div class="server-status">
+                <div class="section-header">
+                    <h2>Server Status</h2>
+                    <button class="refresh-btn" onclick="refreshData()">🔄 Refresh</button>
+                </div>
+                <div class="server-list" id="server-list">
+                    <!-- Server items populated by JS -->
+                </div>
+            </div>
+
+            <div class="metrics-panel">
+                <div class="section-header">
+                    <h2>Resource Usage</h2>
+                    <select id="time-range">
+                        <option>Last 24 hours</option>
+                        <option>Last 7 days</option>
+                        <option>Last 30 days</option>
+                    </select>
+                </div>
+                <div class="metrics-chart">
+                    <div class="chart-container" id="cpu-chart">
+                        <h4>CPU Usage</h4>
+                        <div class="bar-chart">
+                            <div class="bar" style="--height: 45%"><span>45%</span></div>
+                            <div class="bar" style="--height: 62%"><span>62%</span></div>
+                            <div class="bar" style="--height: 38%"><span>38%</span></div>
+                            <div class="bar" style="--height: 71%"><span>71%</span></div>
+                            <div class="bar" style="--height: 55%"><span>55%</span></div>
+                            <div class="bar" style="--height: 42%"><span>42%</span></div>
+                            <div class="bar active" style="--height: 48%"><span>48%</span></div>
+                        </div>
+                        <div class="chart-labels">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                    </div>
+                    <div class="chart-container" id="memory-chart">
+                        <h4>Memory Usage</h4>
+                        <div class="bar-chart">
+                            <div class="bar memory" style="--height: 68%"><span>68%</span></div>
+                            <div class="bar memory" style="--height: 72%"><span>72%</span></div>
+                            <div class="bar memory" style="--height: 65%"><span>65%</span></div>
+                            <div class="bar memory" style="--height: 78%"><span>78%</span></div>
+                            <div class="bar memory" style="--height: 70%"><span>70%</span></div>
+                            <div class="bar memory" style="--height: 63%"><span>63%</span></div>
+                            <div class="bar memory active" style="--height: 67%"><span>67%</span></div>
+                        </div>
+                        <div class="chart-labels">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="alerts-section">
+            <div class="section-header">
+                <h2>Recent Alerts</h2>
+                <a href="#" class="view-all">View All →</a>
+            </div>
+            <div class="alerts-list" id="alerts-list">
+                <!-- Alerts populated by JS -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>DataCenterGuardian v1.0.0 | Last updated: <span id="last-updated"></span></p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
