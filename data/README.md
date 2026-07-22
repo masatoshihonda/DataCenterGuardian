@@ -28,9 +28,8 @@ Energy). This is a genuine, citable number for the latest year OWID
 publishes per country — not a guess. The caveat: it's a **national** average,
 not a per-region one, so regions that share a country (e.g. all four US
 regions here) carry the same value even though real US grids vary a lot
-region to region (e.g. Pacific Northwest hydro vs. Ohio Valley coal/gas). A
-zone-level feed (e.g. Electricity Maps) would fix that, but wasn't reachable
-from this build environment's network egress policy.
+region to region (e.g. Pacific Northwest hydro vs. Ohio Valley coal/gas). This
+is exactly what the live feeds below fix, one region at a time.
 
 `gpu_pricing.csv` — **real data**, regenerate with `uv run python -m data.fetch_gpu_pricing`
 Real AWS GPU-instance pricing at **instance-type granularity**, sourced from
@@ -57,32 +56,52 @@ L40S at all (Azure's own H100/A100 SKU rollout is itself US-heavy today).
 AWS's public catalog covers our benchmarked GPU across a genuinely global
 region set, so this MVP compares AWS regions instead of Azure ones.
 
-`scheduler/live_carbon.py` — **optional, unverified in this environment**
-An Electricity Maps v3 client that can replace the modeled diurnal curve
-with live/forecast carbon intensity per region, if you supply your own API
-key (env var `ELECTRICITYMAPS_API_KEY` or `.streamlit/secrets.toml`'s
-`electricitymaps_api_key`). Written against Electricity Maps' documented
-API contract, but this sandbox blocks outbound connections to
-`api.electricitymap.org` at the network-policy level (every request gets a
-403 on the CONNECT itself) — the same is true of the UK's no-auth Carbon
-Intensity API (`api.carbonintensity.org.uk`), which was tried first and
-also blocked. So this code path has never actually round-tripped a real
-response in this build; it falls back to the modeled curve automatically
-on any failure (missing key, network error, unexpected response shape),
-and the app's "carbon source" column shows "live" vs "modeled" per region
-so you can see what was actually used. The per-region
-`electricitymaps_zone` mapping in `regions.py` is a best-effort guess and
-hasn't been validated against a real response either — several countries
-here have multiple grid zones and AWS doesn't publish which one actually
-feeds a given data center.
+`scheduler/live_carbon_uk.py` — **real data, verified**, no key needed
+The UK's free National Grid ESO Carbon Intensity API
+(`api.carbonintensity.org.uk`). This was unreachable from the build
+sandbox at first (network-policy block), but once the environment's
+allowlist was updated mid-project, real requests confirmed both response
+shapes used here: the true regional breakdown (`/regional`, 18 real GB
+DNO regions incl. "UKPN London") and a real 24h-ahead forecast per region
+(`/regional/intensity/{from}/fw24h/regionid/{id}`). Only `eu-west-2`
+(mapped to regionid 13, "UKPN London") uses this today — it's the one
+region in this project with genuinely live, region-specific,
+short-term-forecast carbon data, not a national annual average. At the
+time of writing London's actual live intensity (~150-220 gCO2/kWh
+depending on time of day) differs meaningfully from the OWID UK annual
+average (217.4) used for other UK-mapped regions, which is exactly the
+kind of temporal/regional signal a national average can't capture.
+`optimizer.py` tries this first for any region with a
+`uk_carbon_intensity_regionid` set, before falling back further down the
+chain.
 
-The original plan (see project history) was Azure's Retail Prices API,
-which needs no auth — but `prices.azure.com` isn't reachable from this
-sandbox's network egress policy, and the same SkyPilot mirror's Azure
-catalog turned out to only cover a handful of US regions and doesn't list
-L40S at all (Azure's own H100/A100 SKU rollout is itself US-heavy today).
-AWS's public catalog covers our benchmarked GPU across a genuinely global
-region set, so this MVP compares AWS regions instead of Azure ones.
+`scheduler/live_carbon.py` — **optional, reachable but not fully verified**
+An Electricity Maps v3 client that can replace the modeled diurnal curve
+with live/forecast carbon intensity for every other region, if you supply
+your own API key (env var `ELECTRICITYMAPS_API_KEY` or
+`.streamlit/secrets.toml`'s `electricitymaps_api_key`). `api.electricitymap.org`
+was also unreachable at first and opened up along with the UK host above —
+an unauthenticated request now gets a real `401` back (confirming the
+endpoint and request path are right), but no free-tier key was available
+in this build to verify the authenticated response shape end-to-end.
+Falls back to the modeled curve automatically on any failure (missing
+key, network error, unexpected response shape); the app's "carbon
+source" column shows exactly what was used per region. The per-region
+`electricitymaps_zone` mapping in `regions.py` is a best-effort guess —
+several countries here have multiple grid zones and AWS doesn't publish
+which one actually feeds a given data center, so treat it as a starting
+point to double-check once you have a real key.
+
+`prices.azure.com` is also now reachable from this build environment
+(confirmed with a real `200` response), which reopens the originally
+planned path to genuine live Azure GPU pricing — not yet wired up, since
+this MVP's pricing pivoted to AWS (see above) once L40S turned out to be
+missing from Azure's public catalog. Worth revisiting if Azure regions
+specifically matter for a future iteration.
+
+WattTime (`api.watttime.org`) and ENTSO-E (`web-api.tp.entsoe.eu`) were
+also requested as additional live carbon sources but are still blocked by
+this environment's network policy as of this writing.
 
 All numbers in this directory are for **relative comparison between
 candidate regions/times**, not an auditable/exact cost or emissions figure —

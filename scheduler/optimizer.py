@@ -11,7 +11,7 @@ content delivery.
 import numpy as np
 import pandas as pd
 
-from scheduler import carbon, live_carbon, pricing
+from scheduler import carbon, live_carbon, live_carbon_uk, pricing
 from scheduler.estimator import (
     estimate_emissions_kg,
     estimate_energy_kwh,
@@ -40,9 +40,23 @@ def _candidate_start_hours(deadline_hours: float, runtime_hours: float, step_hou
 def _region_carbon_curve(
     region_row: pd.Series, hours_ahead: int, electricitymaps_api_key: str | None
 ) -> tuple[pd.DataFrame, str]:
-    """One curve per region covering the whole candidate window -- fetched
+    """
+    One curve per region covering the whole candidate window -- fetched
     (or modeled) once, then sliced per start-hour, instead of re-deriving
-    it for every candidate start time."""
+    it for every candidate start time.
+
+    Provider priority per region: the free, verified UK Carbon Intensity
+    API first (only covers eu-west-2 today), then Electricity Maps if the
+    caller supplied a key (unverified in this build, see
+    scheduler/live_carbon.py), then the modeled diurnal curve.
+    """
+    if not pd.isna(region_row.get("uk_carbon_intensity_regionid")):
+        curve, source = live_carbon_uk.hourly_forecast_with_fallback(
+            region_row, carbon.hourly_forecast, hours_ahead
+        )
+        if source != "modeled":
+            return curve, source
+
     if electricitymaps_api_key:
         return live_carbon.hourly_forecast_with_fallback(
             region_row, carbon.hourly_forecast, electricitymaps_api_key, hours_ahead

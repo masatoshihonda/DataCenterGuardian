@@ -39,19 +39,23 @@ st.warning(
     "comparison between candidates, not audited/exact emissions reporting."
 )
 
-with st.expander("🧪 Live carbon data (experimental, needs your own API key)"):
+with st.expander("🧪 Live carbon data"):
     st.caption(
-        "By default every region uses a modeled day/night carbon curve shaped "
-        "around a real published annual average (see data/README.md). If you "
-        "have an [Electricity Maps](https://www.electricitymaps.com/free-tier) "
-        "API key, paste it below to try live/forecast data instead -- "
-        "**this integration has not been executable-verified**: this app's "
-        "build environment blocks outbound requests to api.electricitymap.org "
-        "at the network level, so the request/response handling in "
-        "`scheduler/live_carbon.py` has never actually round-tripped a real "
-        "call. If a region's live fetch fails for any reason, it silently "
-        "falls back to the modeled curve for that region -- check the "
-        "'carbon source' column below to see what was actually used."
+        "**eu-west-2 (London) always tries a real live feed first, no key "
+        "needed**: the UK's free Carbon Intensity API "
+        "(api.carbonintensity.org.uk), verified against real responses -- "
+        "true regional data (not a national average) with a real 24h "
+        "forecast. Every other region defaults to a modeled day/night "
+        "carbon curve shaped around a real published annual average (see "
+        "data/README.md).\n\n"
+        "If you have an [Electricity Maps](https://www.electricitymaps.com/free-tier) "
+        "API key, paste it below to try live/forecast data for the rest of "
+        "the regions too -- **that integration has not been "
+        "executable-verified against a real key/response yet** (see "
+        "`scheduler/live_carbon.py` for why). If a region's live fetch "
+        "fails for any reason, it silently falls back to the modeled curve "
+        "for that region -- check the 'carbon source' column below to see "
+        "what was actually used for each row."
     )
     api_key_input = st.text_input(
         "Electricity Maps API key",

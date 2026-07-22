@@ -19,9 +19,16 @@ scheduler/live_carbon.py when an API key is configured. These mappings
 are a best-effort guess at the right zone for each AWS region (several
 countries have multiple sub-national zones and AWS doesn't publish which
 grid/substation actually feeds a given data center) -- they have NOT been
-validated against a real API response, since that host is unreachable
-from this build environment. Treat them as a starting point to verify,
-not a certified mapping.
+validated against a real API response with a real key yet (the host only
+became reachable from this build environment partway through the
+project; a real (unauthenticated) request confirmed it responds, but no
+key was available to check the payload shape). Treat them as a starting
+point to verify, not a certified mapping.
+
+`uk_carbon_intensity_regionid` is a real, *verified* regionid from the
+UK's free/no-auth Carbon Intensity API (see scheduler/live_carbon_uk.py)
+-- only set for eu-west-2 (London), the one region this API covers.
+Confirmed by listing /regional and matching by shortname ("London").
 """
 
 REGIONS = [
@@ -30,7 +37,7 @@ REGIONS = [
     {"region": "us-west-1", "cloud": "AWS", "location": "N. California, United States", "country": "United States", "diurnal_swing_pct": 30, "grid_mix_note": "Mixed, more renewables regionally", "electricitymaps_zone": "US-CAL-CISO"},
     {"region": "us-west-2", "cloud": "AWS", "location": "Oregon, United States", "country": "United States", "diurnal_swing_pct": 30, "grid_mix_note": "Mixed with growing wind/solar/hydro", "electricitymaps_zone": "US-NW-BPAT"},
     {"region": "ca-central-1", "cloud": "AWS", "location": "Montreal, Canada", "country": "Canada", "diurnal_swing_pct": 20, "grid_mix_note": "Hydro + nuclear, some fossil provinces", "electricitymaps_zone": "CA-QC"},
-    {"region": "eu-west-2", "cloud": "AWS", "location": "London, United Kingdom", "country": "United Kingdom", "diurnal_swing_pct": 30, "grid_mix_note": "Gas + wind mix", "electricitymaps_zone": "GB"},
+    {"region": "eu-west-2", "cloud": "AWS", "location": "London, United Kingdom", "country": "United Kingdom", "diurnal_swing_pct": 30, "grid_mix_note": "Gas + wind mix", "electricitymaps_zone": "GB", "uk_carbon_intensity_regionid": 13},
     {"region": "eu-central-1", "cloud": "AWS", "location": "Frankfurt, Germany", "country": "Germany", "diurnal_swing_pct": 30, "grid_mix_note": "Coal + wind mix", "electricitymaps_zone": "DE"},
     {"region": "eu-north-1", "cloud": "AWS", "location": "Stockholm, Sweden", "country": "Sweden", "diurnal_swing_pct": 20, "grid_mix_note": "Hydro + nuclear dominant", "electricitymaps_zone": "SE-SE3"},
     {"region": "eu-south-2", "cloud": "AWS", "location": "Zaragoza, Spain", "country": "Spain", "diurnal_swing_pct": 25, "grid_mix_note": "Wind + gas mix", "electricitymaps_zone": "ES"},

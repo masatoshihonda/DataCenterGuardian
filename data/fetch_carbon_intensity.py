@@ -57,6 +57,7 @@ def build_region_table(path: str = REGION_TABLE_PATH) -> pd.DataFrame:
         "region", "cloud", "location", "country",
         "avg_carbon_intensity_gco2_per_kwh", "diurnal_swing_pct",
         "grid_mix_note", "source_year", "electricitymaps_zone",
+        "uk_carbon_intensity_regionid",
     ]
     result = merged[out_cols]
     result.to_csv(path, index=False)
