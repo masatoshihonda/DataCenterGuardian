@@ -1,0 +1,404 @@
+=== GPU info ===
+name, power.limit [W]
+NVIDIA L40S, 350.00 W
+=================================
+Environment Variable Information:
+=================================
+WARNING: CUDA_VISIBLE_DEVICES is set to 0 on dcgmi process. This does not affect which GPUs are selected for diagnostics. Unset CUDA_VISIBLE_DEVICES on dcgmi process. Set CUDA_VISIBLE_DEVICES on nv-hostengine to select GPUs.
+
+Variable Name: CUDA_VISIBLE_DEVICES
+Host: localhost
+Hostengine Process Value: (not set)
+Dcgmi Process Value: 0
+Status: Failed to get hostengine environment variable
+Please set the CUDA_VISIBLE_DEVICES env on nv-hostengine
+
+Successfully paused profiling.
+MARKER: compute-bound (sustained_gemm) start 1784729914.939614124
+=================================
+Environment Variable Information:
+=================================
+WARNING: CUDA_VISIBLE_DEVICES is set to 0 on dcgmi process. This does not affect which GPUs are selected for diagnostics. Unset CUDA_VISIBLE_DEVICES on dcgmi process. Set CUDA_VISIBLE_DEVICES on nv-hostengine to select GPUs.
+
+Variable Name: CUDA_VISIBLE_DEVICES
+Host: localhost
+Hostengine Process Value: (not set)
+Dcgmi Process Value: 0
+Status: Failed to get hostengine environment variable
+Please set the CUDA_VISIBLE_DEVICES env on nv-hostengine
+
+Sustained SGEMM: n=4096, num_reps=2000
+Total time: 6287.116 ms, avg GFLOPS: 43720.8
+MARKER: compute-bound end 1784729923.407439152
+MARKER: memory-bound (laplace3d) start 1784729925.409377796
+=================================
+Environment Variable Information:
+=================================
+WARNING: CUDA_VISIBLE_DEVICES is set to 0 on dcgmi process. This does not affect which GPUs are selected for diagnostics. Unset CUDA_VISIBLE_DEVICES on dcgmi process. Set CUDA_VISIBLE_DEVICES on nv-hostengine to select GPUs.
+
+Variable Name: CUDA_VISIBLE_DEVICES
+Host: localhost
+Hostengine Process Value: (not set)
+Dcgmi Process Value: 0
+Status: Failed to get hostengine environment variable
+Please set the CUDA_VISIBLE_DEVICES env on nv-hostengine
+
+Grid dimensions: 1024 x 1024 x 1024 
+
+GPU Device 0: "Ada" with compute capability 8.9
+
+Copy u1 to device: 366.7 (ms) 
+
+Block dimensions: 128 x 8
+20x GPU_laplace3d: 365.3 (ms) 
+
+Copy u2 to host: 853.6 (ms) 
+
+MARKER: memory-bound end 1784729933.264120191
+=================================
+Environment Variable Information:
+=================================
+WARNING: CUDA_VISIBLE_DEVICES is set to 0 on dcgmi process. This does not affect which GPUs are selected for diagnostics. Unset CUDA_VISIBLE_DEVICES on dcgmi process. Set CUDA_VISIBLE_DEVICES on nv-hostengine to select GPUs.
+
+Variable Name: CUDA_VISIBLE_DEVICES
+Host: localhost
+Hostengine Process Value: (not set)
+Dcgmi Process Value: 0
+Status: Failed to get hostengine environment variable
+Please set the CUDA_VISIBLE_DEVICES env on nv-hostengine
+
+Successfully resumed profiling.
+=== DCGM log: compute-bound (sustained_gemm) ===
+#Entity         POWER             GPUTL             MCUTL             SMCLK        
+ID               W                                                                 
+GPU 0           33.046            0                 0                 210          
+GPU 1           33.574            0                 0                 210          
+GPU 2           35.375            0                 0                 210          
+GPU 3           34.641            0                 0                 210          
+GPU 0           33.046            0                 0                 210          
+GPU 1           25.408            0                 0                 210          
+GPU 2           35.375            0                 0                 210          
+GPU 3           34.641            0                 0                 210          
+GPU 0           32.615            0                 0                 210          
+GPU 1           25.408            0                 0                 210          
+GPU 2           35.375            0                 0                 210          
+GPU 3           34.641            0                 0                 210          
+GPU 0           32.615            0                 0                 210          
+GPU 1           25.408            0                 0                 210          
+GPU 2           35.375            0                 0                 210          
+GPU 3           34.641            0                 0                 210          
+GPU 0           32.615            0                 0                 210          
+GPU 1           25.408            0                 0                 210          
+GPU 2           35.375            0                 0                 210          
+GPU 3           23.547            0                 0                 210          
+GPU 0           32.615            0                 0                 210          
+GPU 1           25.408            0                 0                 210          
+GPU 2           35.375            0                 0                 210          
+GPU 3           23.547            0                 0                 210          
+GPU 0           32.615            0                 0                 210          
+GPU 1           24.918            0                 0                 210          
+GPU 2           25.264            0                 0                 210          
+GPU 3           23.547            0                 0                 210          
+GPU 0           34.123            0                 0                 2520         
+GPU 1           24.918            0                 0                 210          
+GPU 2           25.264            0                 0                 210          
+GPU 3           23.547            0                 0                 210          
+GPU 0           41.831            0                 0                 2520         
+GPU 1           24.918            0                 0                 210          
+GPU 2           25.264            0                 0                 210          
+GPU 3           23.547            0                 0                 210          
+GPU 0           47.355            0                 0                 2520         
+GPU 1           24.918            0                 0                 210          
+GPU 2           25.264            0                 0                 210          
+GPU 3           24.035            0                 0                 210          
+GPU 0           51.764            6                 0                 2520         
+GPU 1           24.918            0                 0                 210          
+GPU 2           25.264            0                 0                 210          
+GPU 3           24.035            0                 0                 210          
+GPU 0           85.102            100               28                1785         
+GPU 1           24.535            0                 0                 210          
+GPU 2           25.341            0                 0                 210          
+GPU 3           24.035            0                 0                 210          
+GPU 0           183.624           100               28                1800         
+GPU 1           24.535            0                 0                 210          
+GPU 2           25.341            0                 0                 210          
+GPU 3           24.035            0                 0                 210          
+GPU 0           252.098           100               28                1785         
+GPU 1           24.535            0                 0                 210          
+GPU 2           25.341            0                 0                 210          
+GPU 3           24.035            0                 0                 210          
+GPU 0           287.123           100               28                1800         
+GPU 1           24.535            0                 0                 210          
+GPU 2           25.341            0                 0                 210          
+GPU 3           24.035            0                 0                 210          
+#Entity         POWER             GPUTL             MCUTL             SMCLK        
+ID               W                                                                 
+GPU 0           336.022           100               27                1635         
+GPU 1           24.535            0                 0                 210          
+GPU 2           25.341            0                 0                 210          
+GPU 3           24.035            0                 0                 210          
+GPU 0           353.905           100               26                1650         
+GPU 1           24.030            0                 0                 210          
+GPU 2           25.663            0                 0                 210          
+GPU 3           24.035            0                 0                 210          
+GPU 0           351.711           100               27                1740         
+GPU 1           24.030            0                 0                 210          
+GPU 2           25.663            0                 0                 210          
+GPU 3           24.035            0                 0                 210          
+GPU 0           350.945           100               28                1770         
+GPU 1           24.030            0                 0                 210          
+GPU 2           25.663            0                 0                 210          
+GPU 3           24.035            0                 0                 210          
+GPU 0           351.034           100               28                1755         
+GPU 1           24.030            0                 0                 210          
+GPU 2           25.663            0                 0                 210          
+GPU 3           23.911            0                 0                 210          
+GPU 0           348.496           100               27                1695         
+GPU 1           24.030            0                 0                 210          
+GPU 2           25.663            0                 0                 210          
+GPU 3           23.911            0                 0                 210          
+GPU 0           347.975           100               27                1620         
+GPU 1           24.030            0                 0                 210          
+GPU 2           25.100            0                 0                 210          
+GPU 3           23.911            0                 0                 210          
+GPU 0           349.070           100               27                1725         
+GPU 1           24.030            0                 0                 210          
+GPU 2           25.100            0                 0                 210          
+GPU 3           23.911            0                 0                 210          
+GPU 0           350.055           100               28                1770         
+GPU 1           24.030            0                 0                 210          
+GPU 2           25.100            0                 0                 210          
+GPU 3           23.911            0                 0                 210          
+GPU 0           350.055           100               28                1740         
+GPU 1           24.030            0                 0                 210          
+GPU 2           25.100            0                 0                 210          
+GPU 3           24.401            0                 0                 210          
+GPU 0           347.910           100               27                1695         
+GPU 1           24.030            0                 0                 210          
+GPU 2           25.100            0                 0                 210          
+GPU 3           24.401            0                 0                 210          
+GPU 0           348.611           100               27                1680         
+GPU 1           24.152            0                 0                 210          
+GPU 2           24.610            0                 0                 210          
+GPU 3           24.401            0                 0                 210          
+GPU 0           349.705           100               27                1740         
+GPU 1           24.152            0                 0                 210          
+GPU 2           24.610            0                 0                 210          
+GPU 3           24.401            0                 0                 210          
+GPU 0           350.318           100               28                1755         
+GPU 1           24.152            0                 0                 210          
+GPU 2           24.610            0                 0                 210          
+GPU 3           24.401            0                 0                 210          
+#Entity         POWER             GPUTL             MCUTL             SMCLK        
+ID               W                                                                 
+GPU 0           350.230           100               28                1725         
+GPU 1           24.152            0                 0                 210          
+GPU 2           24.610            0                 0                 210          
+GPU 3           24.278            0                 0                 210          
+GPU 0           348.633           100               27                1680         
+GPU 1           24.152            0                 0                 210          
+GPU 2           24.610            0                 0                 210          
+GPU 3           24.278            0                 0                 210          
+GPU 0           348.259           100               27                1695         
+GPU 1           23.778            0                 0                 210          
+GPU 2           25.295            0                 0                 210          
+GPU 3           24.278            0                 0                 210          
+GPU 0           350.249           100               27                1710         
+GPU 1           23.778            0                 0                 210          
+GPU 2           25.295            0                 0                 210          
+GPU 3           24.278            0                 0                 210          
+GPU 0           350.732           100               28                1755         
+GPU 1           23.778            0                 0                 210          
+GPU 2           25.295            0                 0                 210          
+GPU 3           24.278            0                 0                 210          
+GPU 0           350.667           100               28                1725         
+GPU 1           23.778            0                 0                 210          
+GPU 2           25.295            0                 0                 210          
+GPU 3           24.278            0                 0                 210          
+GPU 0           349.923           100               27                1680         
+GPU 1           23.778            0                 0                 210          
+GPU 2           25.295            0                 0                 210          
+GPU 3           24.278            0                 0                 210          
+GPU 0           349.224           100               27                1710         
+GPU 1           23.406            0                 0                 210          
+GPU 2           25.223            0                 0                 210          
+GPU 3           24.278            0                 0                 210          
+GPU 0           350.579           100               27                1725         
+GPU 1           23.406            0                 0                 210          
+GPU 2           25.223            0                 0                 210          
+GPU 3           24.278            0                 0                 210          
+GPU 0           350.842           100               28                1725         
+GPU 1           23.406            0                 0                 210          
+GPU 2           25.223            0                 0                 210          
+GPU 3           24.278            0                 0                 210          
+GPU 0           350.360           100               27                1695         
+GPU 1           23.406            0                 0                 210          
+GPU 2           25.223            0                 0                 210          
+GPU 3           24.156            0                 0                 210          
+=== DCGM log: memory-bound (laplace3d) ===
+#Entity         POWER             GPUTL             MCUTL             SMCLK        
+ID               W                                                                 
+GPU 0           64.844            0                 0                 540          
+GPU 1           23.571            0                 0                 210          
+GPU 2           25.956            0                 0                 210          
+GPU 3           23.792            0                 0                 210          
+GPU 0           64.844            0                 0                 540          
+GPU 1           23.571            0                 0                 210          
+GPU 2           25.956            0                 0                 210          
+GPU 3           23.907            0                 0                 210          
+GPU 0           64.844            0                 0                 540          
+GPU 1           23.571            0                 0                 210          
+GPU 2           25.956            0                 0                 210          
+GPU 3           23.907            0                 0                 210          
+GPU 0           64.844            0                 0                 540          
+GPU 1           23.694            0                 0                 210          
+GPU 2           25.148            0                 0                 210          
+GPU 3           23.907            0                 0                 210          
+GPU 0           64.844            0                 0                 540          
+GPU 1           23.694            0                 0                 210          
+GPU 2           25.148            0                 0                 210          
+GPU 3           23.907            0                 0                 210          
+GPU 0           61.241            0                 0                 345          
+GPU 1           23.694            0                 0                 210          
+GPU 2           25.148            0                 0                 210          
+GPU 3           23.907            0                 0                 210          
+GPU 0           60.521            0                 0                 2520         
+GPU 1           23.694            0                 0                 210          
+GPU 2           25.148            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           63.735            3                 0                 2520         
+GPU 1           23.694            0                 0                 210          
+GPU 2           25.148            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           66.146            0                 0                 2520         
+GPU 1           23.939            0                 0                 210          
+GPU 2           25.213            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           68.007            0                 0                 2520         
+GPU 1           23.939            0                 0                 210          
+GPU 2           25.213            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           69.508            0                 0                 2520         
+GPU 1           23.939            0                 0                 210          
+GPU 2           25.213            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           83.143            0                 0                 2520         
+GPU 1           23.939            0                 0                 210          
+GPU 2           25.213            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           83.143            0                 0                 2520         
+GPU 1           23.939            0                 0                 210          
+GPU 2           25.213            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           83.143            0                 0                 2520         
+GPU 1           24.183            0                 0                 210          
+GPU 2           26.021            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           83.143            0                 0                 2520         
+GPU 1           24.183            0                 0                 210          
+GPU 2           26.021            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+#Entity         POWER             GPUTL             MCUTL             SMCLK        
+ID               W                                                                 
+GPU 0           83.143            0                 0                 2520         
+GPU 1           24.183            0                 0                 210          
+GPU 2           26.021            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           82.620            0                 0                 2520         
+GPU 1           24.183            0                 0                 210          
+GPU 2           26.021            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           82.620            0                 0                 2520         
+GPU 1           24.183            0                 0                 210          
+GPU 2           26.021            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           82.620            0                 0                 2520         
+GPU 1           24.550            0                 0                 210          
+GPU 2           25.092            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           82.620            0                 0                 2520         
+GPU 1           24.550            0                 0                 210          
+GPU 2           25.092            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           82.620            0                 0                 2520         
+GPU 1           24.550            0                 0                 210          
+GPU 2           25.092            0                 0                 210          
+GPU 3           24.519            0                 0                 210          
+GPU 0           82.458            0                 0                 2520         
+GPU 1           24.550            0                 0                 210          
+GPU 2           25.092            0                 0                 210          
+GPU 3           24.036            0                 0                 210          
+GPU 0           83.422            41                2                 2520         
+GPU 1           24.550            0                 0                 210          
+GPU 2           25.092            0                 0                 210          
+GPU 3           24.036            0                 0                 210          
+GPU 0           90.102            48                2                 2520         
+GPU 1           24.542            0                 0                 210          
+GPU 2           24.846            0                 0                 210          
+GPU 3           24.036            0                 0                 210          
+GPU 0           105.206           100               91                2520         
+GPU 1           24.542            0                 0                 210          
+GPU 2           24.846            0                 0                 210          
+GPU 3           24.036            0                 0                 210          
+GPU 0           110.289           100               91                2520         
+GPU 1           24.542            0                 0                 210          
+GPU 2           24.846            0                 0                 210          
+GPU 3           24.036            0                 0                 210          
+GPU 0           107.791           20                1                 2520         
+GPU 1           24.542            0                 0                 210          
+GPU 2           24.846            0                 0                 210          
+GPU 3           24.159            0                 0                 210          
+GPU 0           128.561           20                1                 2520         
+GPU 1           24.542            0                 0                 210          
+GPU 2           24.846            0                 0                 210          
+GPU 3           24.159            0                 0                 210          
+GPU 0           127.854           20                1                 2520         
+GPU 1           24.046            0                 0                 210          
+GPU 2           25.652            0                 0                 210          
+GPU 3           24.159            0                 0                 210          
+#Entity         POWER             GPUTL             MCUTL             SMCLK        
+ID               W                                                                 
+GPU 0           108.580           20                1                 2520         
+GPU 1           24.046            0                 0                 210          
+GPU 2           25.652            0                 0                 210          
+GPU 3           24.159            0                 0                 210          
+GPU 0           88.161            100               9                 2520         
+GPU 1           24.046            0                 0                 210          
+GPU 2           25.652            0                 0                 210          
+GPU 3           24.159            0                 0                 210          
+GPU 0           87.464            0                 0                 2520         
+GPU 1           24.046            0                 0                 210          
+GPU 2           25.652            0                 0                 210          
+GPU 3           24.770            0                 0                 210          
+GPU 0           87.042            0                 0                 2520         
+GPU 1           24.046            0                 0                 210          
+GPU 2           25.652            0                 0                 210          
+GPU 3           24.770            0                 0                 210          
+GPU 0           86.630            0                 0                 2520         
+GPU 1           23.932            0                 0                 210          
+GPU 2           25.333            0                 0                 210          
+GPU 3           24.770            0                 0                 210          
+GPU 0           86.239            0                 0                 2520         
+GPU 1           23.932            0                 0                 210          
+GPU 2           25.333            0                 0                 210          
+GPU 3           24.770            0                 0                 210          
+GPU 0           86.030            0                 0                 2520         
+GPU 1           23.932            0                 0                 210          
+GPU 2           25.333            0                 0                 210          
+GPU 3           24.770            0                 0                 210          
+GPU 0           86.030            0                 0                 2520         
+GPU 1           23.932            0                 0                 210          
+GPU 2           25.333            0                 0                 210          
+GPU 3           24.648            0                 0                 210          
+GPU 0           86.030            0                 0                 2520         
+GPU 1           23.932            0                 0                 210          
+GPU 2           25.333            0                 0                 210          
+GPU 3           24.648            0                 0                 210          
+GPU 0           86.030            0                 0                 2520         
+GPU 1           23.694            0                 0                 210          
+GPU 2           25.384            0                 0                 210          
+GPU 3           24.648            0                 0                 210          
+GPU 0           86.030            0                 0                 2520         
+GPU 1           23.694            0                 0                 210          
+GPU 2           25.384            0                 0                 210          
+GPU 3           24.648            0                 0                 210          
