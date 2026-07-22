@@ -1,24 +1,26 @@
 """
-Builds data/gpu_pricing.csv from real on-demand AWS GPU VM pricing, sourced
+Builds data/gpu_pricing.csv from real AWS GPU VM pricing, at real
+instance-type granularity with both on-demand and spot prices, sourced
 from the SkyPilot project's public cloud-instance-catalog mirror
-(https://github.com/skypilot-org/skypilot-catalog), which is scraped
-directly from AWS's own pricing API and kept up to date for the
-SkyPilot scheduler project.
+(https://github.com/skypilot-org/skypilot-catalog), itself scraped from
+AWS's own pricing API.
 
-Azure's public Retail Prices API (prices.azure.com) is the more obvious
-"no auth needed" source and was the original plan, but it isn't reachable
-from this sandbox's network egress policy. The Azure VM catalog available
-through the same SkyPilot mirror also turned out to only cover a handful
-of US regions and doesn't list our benchmarked L40S GPU at all -- Azure's
-own H100/A100 SKU rollout is itself US-heavy today. AWS's public catalog
-gives real prices for L40S, A100-80GB and H100 across a broad, genuinely
-global set of regions, so data/regions.py and this MVP now compare AWS
-regions instead of Azure ones.
+Azure's public Retail Prices API (prices.azure.com) was the original plan
+(no auth needed) but isn't reachable from this sandbox's network egress
+policy. The Azure VM catalog available through the same SkyPilot mirror
+also only covers a handful of US regions and doesn't list our benchmarked
+L40S GPU at all. AWS's public catalog gives real prices for L40S,
+A100-80GB and H100 across a genuinely global region set, so
+data/regions.py compares AWS regions instead of Azure ones.
 
-Each (region, GPU model) price is the median of "price per GPU" (list
-price divided by GPU count) across every real AWS instance type in that
-region offering that accelerator -- e.g. g6e.xlarge through g6e.48xlarge
-for L40S -- not a single cherry-picked SKU.
+Each row is one real (region, instance type) combination -- not a
+collapsed median -- so the app can show e.g. "g6e.xlarge" next to
+"g6e.48xlarge" as genuinely different SKUs with different $/GPU. On-demand
+price is constant across a region's availability zones in AWS's own
+pricing model; spot price is real and does vary by AZ, so
+`hourly_usd_per_gpu_spot` here is the mean across the AZs this catalog
+sampled for that instance type (spot prices also fluctuate over time --
+this is a snapshot, not a live quote).
 
 Usage (run as a module from the repo root, so `data.regions` resolves):
     uv run python -m data.fetch_gpu_pricing
@@ -50,7 +52,8 @@ def fetch_aws_gpu_prices() -> pd.DataFrame:
     df = pd.read_csv(RAW_CACHE_PATH)
     df = df.dropna(subset=["AcceleratorName", "Price", "AcceleratorCount"])
     df = df[df["AcceleratorName"].isin(ACCELERATOR_TO_GPU_MODEL)]
-    df["price_per_gpu_usd"] = df["Price"] / df["AcceleratorCount"]
+    df["price_per_gpu_ondemand_usd"] = df["Price"] / df["AcceleratorCount"]
+    df["price_per_gpu_spot_usd"] = df["SpotPrice"] / df["AcceleratorCount"]
     return df
 
 
@@ -59,17 +62,36 @@ def build_gpu_pricing_table(path: str = GPU_PRICING_PATH) -> pd.DataFrame:
     prices = fetch_aws_gpu_prices()
     prices = prices[prices["Region"].isin(region_codes)]
 
+    # Collapse per-availability-zone duplicates: on-demand price is the
+    # same across AZs in a region, spot price genuinely varies by AZ.
     summary = (
-        prices.groupby(["Region", "AcceleratorName"])["price_per_gpu_usd"]
-        .agg(hourly_usd_per_gpu="median", n_instance_types_sampled="count")
+        prices.groupby(["Region", "AcceleratorName", "InstanceType", "AcceleratorCount", "vCPUs", "MemoryGiB"])
+        .agg(
+            hourly_usd_per_gpu_ondemand=("price_per_gpu_ondemand_usd", "mean"),
+            hourly_usd_per_gpu_spot=("price_per_gpu_spot_usd", "mean"),
+            n_availability_zones=("price_per_gpu_ondemand_usd", "count"),
+        )
         .reset_index()
     )
     summary["gpu_model"] = summary["AcceleratorName"].map(ACCELERATOR_TO_GPU_MODEL)
-    summary["hourly_usd_per_gpu"] = summary["hourly_usd_per_gpu"].round(2)
-    summary = summary.rename(columns={"Region": "region"})
+    summary["hourly_usd_per_gpu_ondemand"] = summary["hourly_usd_per_gpu_ondemand"].round(3)
+    summary["hourly_usd_per_gpu_spot"] = summary["hourly_usd_per_gpu_spot"].round(3)
+    summary = summary.rename(columns={
+        "Region": "region",
+        "InstanceType": "instance_type",
+        "AcceleratorCount": "gpu_count_per_instance",
+        "vCPUs": "vcpus",
+        "MemoryGiB": "memory_gib",
+    })
 
-    result = summary[["region", "gpu_model", "hourly_usd_per_gpu", "n_instance_types_sampled"]]
-    result = result.sort_values(["region", "gpu_model"]).reset_index(drop=True)
+    out_cols = [
+        "region", "gpu_model", "instance_type", "gpu_count_per_instance",
+        "vcpus", "memory_gib", "hourly_usd_per_gpu_ondemand",
+        "hourly_usd_per_gpu_spot", "n_availability_zones",
+    ]
+    result = summary[out_cols].sort_values(
+        ["region", "gpu_model", "hourly_usd_per_gpu_ondemand"]
+    ).reset_index(drop=True)
     result.to_csv(path, index=False)
     return result
 

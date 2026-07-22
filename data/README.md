@@ -33,16 +33,48 @@ zone-level feed (e.g. Electricity Maps) would fix that, but wasn't reachable
 from this build environment's network egress policy.
 
 `gpu_pricing.csv` — **real data**, regenerate with `uv run python -m data.fetch_gpu_pricing`
-Real on-demand AWS GPU-instance pricing, sourced from the
-[SkyPilot project's public cloud-instance catalog](https://github.com/skypilot-org/skypilot-catalog)
-(scraped from AWS's own pricing API). Each (region, GPU model) figure is the
-median "price per GPU" (list price ÷ GPU count) across every real AWS
-instance type in that region offering that accelerator — e.g. `g6e.xlarge`
-through `g6e.48xlarge` for L40S — not one cherry-picked SKU.
-`n_instance_types_sampled` records how many went into that median.
-Coverage is genuinely uneven (e.g. A100-80GB is only listed in 5 of the 17
-regions) because that's the real state of AWS's public GPU catalog, not a
-gap in this pipeline.
+Real AWS GPU-instance pricing at **instance-type granularity**, sourced from
+the [SkyPilot project's public cloud-instance catalog](https://github.com/skypilot-org/skypilot-catalog)
+(scraped from AWS's own pricing API). Every row is one real (region, GPU
+model, instance type) combination — e.g. `g6e.xlarge` through `g6e.48xlarge`
+for L40S are kept as separate real SKUs with their own price, not collapsed
+into a single blended number — with both `hourly_usd_per_gpu_ondemand` and
+`hourly_usd_per_gpu_spot`. On-demand price is constant across a region's
+availability zones in AWS's own pricing model; spot price genuinely varies
+by AZ, so the spot figure here is the mean across the AZs this catalog
+snapshot sampled (spot prices also move continuously in the real market —
+this is one point-in-time snapshot, not a live quote). Coverage is genuinely
+uneven (e.g. A100-80GB only appears in 5 of the 17 regions) because that's
+the real state of AWS's public GPU catalog, not a gap in this pipeline.
+The app lets you pick a specific instance type or leave it on "cheapest
+real SKU", and switch between on-demand and spot.
+
+The original plan (see project history) was Azure's Retail Prices API,
+which needs no auth — but `prices.azure.com` isn't reachable from this
+sandbox's network egress policy, and the same SkyPilot mirror's Azure
+catalog turned out to only cover a handful of US regions and doesn't list
+L40S at all (Azure's own H100/A100 SKU rollout is itself US-heavy today).
+AWS's public catalog covers our benchmarked GPU across a genuinely global
+region set, so this MVP compares AWS regions instead of Azure ones.
+
+`scheduler/live_carbon.py` — **optional, unverified in this environment**
+An Electricity Maps v3 client that can replace the modeled diurnal curve
+with live/forecast carbon intensity per region, if you supply your own API
+key (env var `ELECTRICITYMAPS_API_KEY` or `.streamlit/secrets.toml`'s
+`electricitymaps_api_key`). Written against Electricity Maps' documented
+API contract, but this sandbox blocks outbound connections to
+`api.electricitymap.org` at the network-policy level (every request gets a
+403 on the CONNECT itself) — the same is true of the UK's no-auth Carbon
+Intensity API (`api.carbonintensity.org.uk`), which was tried first and
+also blocked. So this code path has never actually round-tripped a real
+response in this build; it falls back to the modeled curve automatically
+on any failure (missing key, network error, unexpected response shape),
+and the app's "carbon source" column shows "live" vs "modeled" per region
+so you can see what was actually used. The per-region
+`electricitymaps_zone` mapping in `regions.py` is a best-effort guess and
+hasn't been validated against a real response either — several countries
+here have multiple grid zones and AWS doesn't publish which one actually
+feeds a given data center.
 
 The original plan (see project history) was Azure's Retail Prices API,
 which needs no auth — but `prices.azure.com` isn't reachable from this

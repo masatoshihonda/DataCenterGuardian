@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from scheduler import carbon, pricing
+from scheduler import carbon, live_carbon, pricing
 from scheduler.optimizer import recommend
 from telemetry.parse_dcgm_log import build_benchmark_profiles_csv
 
@@ -38,6 +38,27 @@ st.warning(
     "allocation and contractual pricing. These figures support relative "
     "comparison between candidates, not audited/exact emissions reporting."
 )
+
+with st.expander("🧪 Live carbon data (experimental, needs your own API key)"):
+    st.caption(
+        "By default every region uses a modeled day/night carbon curve shaped "
+        "around a real published annual average (see data/README.md). If you "
+        "have an [Electricity Maps](https://www.electricitymaps.com/free-tier) "
+        "API key, paste it below to try live/forecast data instead -- "
+        "**this integration has not been executable-verified**: this app's "
+        "build environment blocks outbound requests to api.electricitymap.org "
+        "at the network level, so the request/response handling in "
+        "`scheduler/live_carbon.py` has never actually round-tripped a real "
+        "call. If a region's live fetch fails for any reason, it silently "
+        "falls back to the modeled curve for that region -- check the "
+        "'carbon source' column below to see what was actually used."
+    )
+    api_key_input = st.text_input(
+        "Electricity Maps API key",
+        value=live_carbon.get_api_key() or "",
+        type="password",
+    )
+    electricitymaps_api_key = api_key_input or None
 
 # GPU TDP reference used to scale an observed power-draw pattern from one GPU
 # model to another (illustrative, from published spec sheets).
@@ -91,7 +112,7 @@ with col_table:
 
 st.subheader("2. Describe your job")
 
-input_cols = st.columns(4)
+input_cols = st.columns(5)
 
 with input_cols[0]:
     workload_choice = st.selectbox(
@@ -119,6 +140,21 @@ with input_cols[2]:
 with input_cols[3]:
     preference = st.select_slider("Priority", options=["Cheapest", "Balanced", "Greenest"], value="Balanced")
 
+with input_cols[4]:
+    pricing_type = st.radio("Pricing", options=["On-Demand", "Spot"], horizontal=True)
+    instance_options = ["Any (cheapest real SKU)"] + sorted(
+        pricing_df.loc[pricing_df["gpu_model"] == gpu_model, "instance_type"].unique()
+    )
+    instance_choice = st.selectbox("Instance type", options=instance_options)
+    instance_type = None if instance_choice == "Any (cheapest real SKU)" else instance_choice
+
+if pricing_type == "Spot":
+    st.caption(
+        "Spot prices are real AWS spot quotes from the catalog snapshot, but spot "
+        "capacity can be reclaimed with short notice and prices fluctuate "
+        "continuously -- treat this as directional, not a locked-in rate."
+    )
+
 # Scale the observed power-draw pattern to the target GPU's TDP so a
 # memory-bound profile measured on an L40S still gives a sensible estimate
 # when the user is pricing out an A100 or H100.
@@ -138,24 +174,32 @@ if st.button("Find best region & start time", type="primary"):
         deadline_hours=float(deadline_hours),
         gpu_model=gpu_model,
         preference=preference,
+        pricing_type=pricing_type,
+        instance_type=instance_type,
         regions_df=regions_df,
         pricing_df=pricing_df,
+        electricitymaps_api_key=electricitymaps_api_key,
     )
 
     if candidates.empty:
-        st.error(f"No pricing data available for {gpu_model}.")
+        st.error(
+            f"No {pricing_type} pricing available for {gpu_model}"
+            + (f" on {instance_type}" if instance_type else "")
+            + " in any modeled region."
+        )
     else:
         st.subheader("3. Recommendation")
 
         best = candidates.iloc[0]
         now_baseline = candidates[candidates["start_hours_from_now"] == 0].sort_values("cost_usd").iloc[0]
 
-        metric_cols = st.columns(4)
+        metric_cols = st.columns(5)
         metric_cols[0].metric("Recommended region", best["region"])
         start_label = "Now" if best["start_hours_from_now"] == 0 else f"in {int(best['start_hours_from_now'])}h"
         metric_cols[1].metric("Start", start_label)
-        metric_cols[2].metric("Estimated cost", f"${best['cost_usd']:.2f}")
-        metric_cols[3].metric("Estimated CO2", f"{best['emissions_kg_co2']:.2f} kg")
+        metric_cols[2].metric("Instance type", best["instance_type"])
+        metric_cols[3].metric("Estimated cost", f"${best['cost_usd']:.2f}")
+        metric_cols[4].metric("Estimated CO2", f"{best['emissions_kg_co2']:.2f} kg")
 
         if now_baseline["emissions_kg_co2"] > 0 and best["emissions_kg_co2"] < now_baseline["emissions_kg_co2"]:
             reduction_pct = (
@@ -171,16 +215,19 @@ if st.button("Find best region & start time", type="primary"):
 
         st.markdown("#### Top candidates")
         display_cols = [
-            "rank", "region", "start_hours_from_now", "cost_usd",
-            "energy_kwh", "avg_carbon_intensity_gco2_per_kwh", "emissions_kg_co2", "score",
+            "rank", "region", "instance_type", "start_hours_from_now", "cost_usd",
+            "energy_kwh", "avg_carbon_intensity_gco2_per_kwh", "emissions_kg_co2",
+            "carbon_data_source", "score",
         ]
         st.dataframe(
             candidates[display_cols].head(15).rename(columns={
+                "instance_type": "instance",
                 "start_hours_from_now": "start (h from now)",
                 "cost_usd": "cost (USD)",
                 "energy_kwh": "energy (kWh)",
                 "avg_carbon_intensity_gco2_per_kwh": "avg carbon (gCO2/kWh)",
                 "emissions_kg_co2": "emissions (kg CO2)",
+                "carbon_data_source": "carbon source",
             }),
             hide_index=True,
             use_container_width=True,
