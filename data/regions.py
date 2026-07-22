@@ -1,0 +1,35 @@
+"""
+Single source of truth for which cloud regions the GreenGPU Explorer
+compares, and their country (used to join real grid carbon-intensity
+data) and location label (for display).
+
+Regions were chosen because AWS actually offers at least one of our
+target GPU models (L40S, A100-80GB, H100) there, per the public
+SkyPilot cloud-instance catalog (see fetch_gpu_pricing.py) -- these
+aren't arbitrary city names, they're real AWS region codes.
+
+`diurnal_swing_pct` and `grid_mix_note` are still editorial/illustrative
+(no free live hourly-carbon feed is wired up here); `country` feeds a
+real published annual-average carbon intensity figure via
+fetch_carbon_intensity.py.
+"""
+
+REGIONS = [
+    {"region": "us-east-1", "cloud": "AWS", "location": "N. Virginia, United States", "country": "United States", "diurnal_swing_pct": 25, "grid_mix_note": "Gas + coal mix"},
+    {"region": "us-east-2", "cloud": "AWS", "location": "Ohio, United States", "country": "United States", "diurnal_swing_pct": 25, "grid_mix_note": "Gas + coal mix"},
+    {"region": "us-west-1", "cloud": "AWS", "location": "N. California, United States", "country": "United States", "diurnal_swing_pct": 30, "grid_mix_note": "Mixed, more renewables regionally"},
+    {"region": "us-west-2", "cloud": "AWS", "location": "Oregon, United States", "country": "United States", "diurnal_swing_pct": 30, "grid_mix_note": "Mixed with growing wind/solar/hydro"},
+    {"region": "ca-central-1", "cloud": "AWS", "location": "Montreal, Canada", "country": "Canada", "diurnal_swing_pct": 20, "grid_mix_note": "Hydro + nuclear, some fossil provinces"},
+    {"region": "eu-west-2", "cloud": "AWS", "location": "London, United Kingdom", "country": "United Kingdom", "diurnal_swing_pct": 30, "grid_mix_note": "Gas + wind mix"},
+    {"region": "eu-central-1", "cloud": "AWS", "location": "Frankfurt, Germany", "country": "Germany", "diurnal_swing_pct": 30, "grid_mix_note": "Coal + wind mix"},
+    {"region": "eu-north-1", "cloud": "AWS", "location": "Stockholm, Sweden", "country": "Sweden", "diurnal_swing_pct": 20, "grid_mix_note": "Hydro + nuclear dominant"},
+    {"region": "eu-south-2", "cloud": "AWS", "location": "Zaragoza, Spain", "country": "Spain", "diurnal_swing_pct": 25, "grid_mix_note": "Wind + gas mix"},
+    {"region": "me-central-1", "cloud": "AWS", "location": "United Arab Emirates", "country": "United Arab Emirates", "diurnal_swing_pct": 15, "grid_mix_note": "Gas dominant"},
+    {"region": "ap-northeast-1", "cloud": "AWS", "location": "Tokyo, Japan", "country": "Japan", "diurnal_swing_pct": 20, "grid_mix_note": "Gas + coal mix"},
+    {"region": "ap-northeast-2", "cloud": "AWS", "location": "Seoul, South Korea", "country": "South Korea", "diurnal_swing_pct": 20, "grid_mix_note": "Coal + gas mix"},
+    {"region": "ap-northeast-3", "cloud": "AWS", "location": "Osaka, Japan", "country": "Japan", "diurnal_swing_pct": 20, "grid_mix_note": "Gas + coal mix"},
+    {"region": "ap-south-1", "cloud": "AWS", "location": "Mumbai, India", "country": "India", "diurnal_swing_pct": 20, "grid_mix_note": "Coal dominant"},
+    {"region": "ap-southeast-1", "cloud": "AWS", "location": "Singapore", "country": "Singapore", "diurnal_swing_pct": 15, "grid_mix_note": "Gas dominant"},
+    {"region": "ap-southeast-2", "cloud": "AWS", "location": "Sydney, Australia", "country": "Australia", "diurnal_swing_pct": 25, "grid_mix_note": "Coal dominant"},
+    {"region": "ap-southeast-3", "cloud": "AWS", "location": "Jakarta, Indonesia", "country": "Indonesia", "diurnal_swing_pct": 15, "grid_mix_note": "Coal dominant"},
+]

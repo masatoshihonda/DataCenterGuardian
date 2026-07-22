@@ -11,23 +11,47 @@ estimate. Regenerate with:
 uv run python telemetry/parse_dcgm_log.py
 ```
 
-`region_carbon_intensity.csv`
-Illustrative, order-of-magnitude annual-average grid carbon intensity per
-Azure region, based on publicly known regional generation mix (e.g.
-hydro/nuclear-heavy grids in the Nordics and France are low-carbon; coal-heavy
-grids in Poland, India and Australia are high-carbon). These are **not**
-pulled from a live API (e.g. Electricity Maps) and do not reflect real-time or
-seasonal variation. `diurnal_swing_pct` is a rough day/night swing used only
-to shape a synthetic hourly curve in `scheduler/carbon.py` — replace this
-file's loader with a live carbon-intensity API for production use.
+`regions.py`
+The list of cloud regions compared by the explorer, and the country/location
+metadata used to join real external data below. Regions are real AWS region
+codes (`eu-north-1`, `ap-south-1`, ...), chosen because AWS actually offers
+our benchmarked GPU model (L40S) or the other modeled GPUs there — see
+`fetch_gpu_pricing.py`. `diurnal_swing_pct` and `grid_mix_note` are still
+editorial/illustrative: no live hourly-carbon feed is wired up, only a real
+annual-average figure per country (below).
 
-`gpu_pricing.csv`
-Illustrative on-demand hourly USD-per-GPU figures in the general range of
-publicly listed cloud GPU VM pricing, with small region-to-region variation.
-Not fetched from the Azure Retail Prices API in this build — swap
-`scheduler/pricing.py`'s loader for that API (no auth required) to get live
-prices.
+`region_carbon_intensity.csv` — **real data**, regenerate with `uv run python -m data.fetch_carbon_intensity`
+Real published annual-average grid carbon intensity (gCO2/kWh) per country,
+from [Our World in Data's energy dataset](https://github.com/owid/energy-data)
+(itself sourced from Ember / Energy Institute Statistical Review of World
+Energy). This is a genuine, citable number for the latest year OWID
+publishes per country — not a guess. The caveat: it's a **national** average,
+not a per-region one, so regions that share a country (e.g. all four US
+regions here) carry the same value even though real US grids vary a lot
+region to region (e.g. Pacific Northwest hydro vs. Ohio Valley coal/gas). A
+zone-level feed (e.g. Electricity Maps) would fix that, but wasn't reachable
+from this build environment's network egress policy.
+
+`gpu_pricing.csv` — **real data**, regenerate with `uv run python -m data.fetch_gpu_pricing`
+Real on-demand AWS GPU-instance pricing, sourced from the
+[SkyPilot project's public cloud-instance catalog](https://github.com/skypilot-org/skypilot-catalog)
+(scraped from AWS's own pricing API). Each (region, GPU model) figure is the
+median "price per GPU" (list price ÷ GPU count) across every real AWS
+instance type in that region offering that accelerator — e.g. `g6e.xlarge`
+through `g6e.48xlarge` for L40S — not one cherry-picked SKU.
+`n_instance_types_sampled` records how many went into that median.
+Coverage is genuinely uneven (e.g. A100-80GB is only listed in 5 of the 17
+regions) because that's the real state of AWS's public GPU catalog, not a
+gap in this pipeline.
+
+The original plan (see project history) was Azure's Retail Prices API,
+which needs no auth — but `prices.azure.com` isn't reachable from this
+sandbox's network egress policy, and the same SkyPilot mirror's Azure
+catalog turned out to only cover a handful of US regions and doesn't list
+L40S at all (Azure's own H100/A100 SKU rollout is itself US-heavy today).
+AWS's public catalog covers our benchmarked GPU across a genuinely global
+region set, so this MVP compares AWS regions instead of Azure ones.
 
 All numbers in this directory are for **relative comparison between
-candidate regions/times**, not as an auditable/exact cost or emissions
-figure. See the disclaimer shown in the GreenGPU Explorer page.
+candidate regions/times**, not an auditable/exact cost or emissions figure —
+see the disclaimer on the GreenGPU Explorer page.
