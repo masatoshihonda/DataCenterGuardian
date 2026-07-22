@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from scheduler import carbon, live_carbon, pricing
+from scheduler import carbon, live_carbon, live_carbon_entsoe, live_carbon_watttime, pricing
 from scheduler.optimizer import recommend
 from telemetry.parse_dcgm_log import build_benchmark_profiles_csv
 
@@ -48,21 +48,42 @@ with st.expander("🧪 Live carbon data"):
         "forecast. Every other region defaults to a modeled day/night "
         "carbon curve shaped around a real published annual average (see "
         "data/README.md).\n\n"
-        "If you have an [Electricity Maps](https://www.electricitymaps.com/free-tier) "
-        "API key, paste it below to try live/forecast data for the rest of "
-        "the regions too -- **that integration has not been "
-        "executable-verified against a real key/response yet** (see "
-        "`scheduler/live_carbon.py` for why). If a region's live fetch "
-        "fails for any reason, it silently falls back to the modeled curve "
-        "for that region -- check the 'carbon source' column below to see "
-        "what was actually used for each row."
+        "The keyed providers below are reachable from this deployment and "
+        "their request/error-response shapes have been checked, but none "
+        "have been verified against a real *authenticated* response (no "
+        "free-tier account was available in this build) -- if a live "
+        "fetch fails for any reason it silently falls back to the modeled "
+        "curve for that region. Check the 'carbon source' column below to "
+        "see what was actually used for each row."
     )
-    api_key_input = st.text_input(
-        "Electricity Maps API key",
-        value=live_carbon.get_api_key() or "",
-        type="password",
-    )
-    electricitymaps_api_key = api_key_input or None
+
+    col_em, col_wt, col_entsoe = st.columns(3)
+
+    with col_em:
+        st.caption("[Electricity Maps](https://www.electricitymaps.com/free-tier) (any region)")
+        api_key_input = st.text_input(
+            "API key", value=live_carbon.get_api_key() or "", type="password", key="em_key",
+        )
+        electricitymaps_api_key = api_key_input or None
+
+    with col_wt:
+        st.caption("[WattTime](https://www.watttime.org/get-the-data/) (US/Canada regions)")
+        wt_creds = live_carbon_watttime.get_credentials()
+        wt_username = st.text_input("Username", value=(wt_creds[0] if wt_creds else ""), key="wt_user")
+        wt_password = st.text_input(
+            "Password", value=(wt_creds[1] if wt_creds else ""), type="password", key="wt_pass",
+        )
+        watttime_credentials = (wt_username, wt_password) if wt_username and wt_password else None
+
+    with col_entsoe:
+        st.caption("[ENTSO-E](https://transparency.entsoe.eu) (EU regions, current-value anchor only)")
+        entsoe_token_input = st.text_input(
+            "Security token",
+            value=live_carbon_entsoe.get_security_token() or "",
+            type="password",
+            key="entsoe_key",
+        )
+        entsoe_security_token = entsoe_token_input or None
 
 # GPU TDP reference used to scale an observed power-draw pattern from one GPU
 # model to another (illustrative, from published spec sheets).
@@ -183,6 +204,8 @@ if st.button("Find best region & start time", type="primary"):
         regions_df=regions_df,
         pricing_df=pricing_df,
         electricitymaps_api_key=electricitymaps_api_key,
+        watttime_credentials=watttime_credentials,
+        entsoe_security_token=entsoe_security_token,
     )
 
     if candidates.empty:

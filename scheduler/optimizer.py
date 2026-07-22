@@ -11,7 +11,7 @@ content delivery.
 import numpy as np
 import pandas as pd
 
-from scheduler import carbon, live_carbon, live_carbon_uk, pricing
+from scheduler import carbon, live_carbon, live_carbon_entsoe, live_carbon_uk, live_carbon_watttime, pricing
 from scheduler.estimator import (
     estimate_emissions_kg,
     estimate_energy_kwh,
@@ -38,21 +38,45 @@ def _candidate_start_hours(deadline_hours: float, runtime_hours: float, step_hou
 
 
 def _region_carbon_curve(
-    region_row: pd.Series, hours_ahead: int, electricitymaps_api_key: str | None
+    region_row: pd.Series,
+    hours_ahead: int,
+    electricitymaps_api_key: str | None,
+    watttime_credentials: tuple[str, str] | None,
+    entsoe_security_token: str | None,
 ) -> tuple[pd.DataFrame, str]:
     """
     One curve per region covering the whole candidate window -- fetched
     (or modeled) once, then sliced per start-hour, instead of re-deriving
     it for every candidate start time.
 
-    Provider priority per region: the free, verified UK Carbon Intensity
-    API first (only covers eu-west-2 today), then Electricity Maps if the
-    caller supplied a key (unverified in this build, see
-    scheduler/live_carbon.py), then the modeled diurnal curve.
+    Provider priority per region, most-specific/most-verified first:
+    1. UK Carbon Intensity API (eu-west-2 only) -- free, no key, verified.
+    2. WattTime (US/Canada regions) -- needs credentials, reachable but
+       not fully verified (see scheduler/live_carbon_watttime.py).
+    3. ENTSO-E (EU regions) -- needs a security token, re-anchors the
+       modeled curve to a real current reading rather than a full
+       forecast (see scheduler/live_carbon_entsoe.py).
+    4. Electricity Maps (any region) -- needs a key, reachable but not
+       fully verified (see scheduler/live_carbon.py).
+    5. The modeled diurnal curve.
     """
     if not pd.isna(region_row.get("uk_carbon_intensity_regionid")):
         curve, source = live_carbon_uk.hourly_forecast_with_fallback(
             region_row, carbon.hourly_forecast, hours_ahead
+        )
+        if source != "modeled":
+            return curve, source
+
+    if watttime_credentials:
+        curve, source = live_carbon_watttime.hourly_forecast_with_fallback(
+            region_row, carbon.hourly_forecast, watttime_credentials, hours_ahead
+        )
+        if source != "modeled":
+            return curve, source
+
+    if entsoe_security_token:
+        curve, source = live_carbon_entsoe.hourly_forecast_with_fallback(
+            region_row, carbon.hourly_forecast, entsoe_security_token, hours_ahead
         )
         if source != "modeled":
             return curve, source
@@ -86,6 +110,8 @@ def recommend(
     overhead_factor: float = 1.4,
     start_hour_step: int = 2,
     electricitymaps_api_key: str | None = None,
+    watttime_credentials: tuple[str, str] | None = None,
+    entsoe_security_token: str | None = None,
 ) -> pd.DataFrame:
     if regions_df is None:
         regions_df = carbon.load_region_table()
@@ -110,7 +136,9 @@ def recommend(
 
         cost_usd = rate * gpu_count * runtime_hours
         energy_kwh = estimate_energy_kwh(system_power_w, runtime_hours)
-        curve, carbon_source = _region_carbon_curve(region_row, hours_ahead, electricitymaps_api_key)
+        curve, carbon_source = _region_carbon_curve(
+            region_row, hours_ahead, electricitymaps_api_key, watttime_credentials, entsoe_security_token
+        )
 
         for start_hour in start_hours:
             avg_carbon = _avg_carbon_over_window(curve, start_hour, span_hours)

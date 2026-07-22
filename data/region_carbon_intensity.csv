@@ -1,18 +1,18 @@
-region,cloud,location,country,avg_carbon_intensity_gco2_per_kwh,diurnal_swing_pct,grid_mix_note,source_year,electricitymaps_zone,uk_carbon_intensity_regionid
-us-east-1,AWS,"N. Virginia, United States",United States,384.4,25,Gas + coal mix,2025,US-MIDA-PJM,
-us-east-2,AWS,"Ohio, United States",United States,384.4,25,Gas + coal mix,2025,US-MIDA-PJM,
-us-west-1,AWS,"N. California, United States",United States,384.4,30,"Mixed, more renewables regionally",2025,US-CAL-CISO,
-us-west-2,AWS,"Oregon, United States",United States,384.4,30,Mixed with growing wind/solar/hydro,2025,US-NW-BPAT,
-ca-central-1,AWS,"Montreal, Canada",Canada,190.7,20,"Hydro + nuclear, some fossil provinces",2025,CA-QC,
-eu-west-2,AWS,"London, United Kingdom",United Kingdom,217.4,30,Gas + wind mix,2025,GB,13.0
-eu-central-1,AWS,"Frankfurt, Germany",Germany,329.6,30,Coal + wind mix,2025,DE,
-eu-north-1,AWS,"Stockholm, Sweden",Sweden,35.3,20,Hydro + nuclear dominant,2025,SE-SE3,
-eu-south-2,AWS,"Zaragoza, Spain",Spain,153.6,25,Wind + gas mix,2025,ES,
-me-central-1,AWS,United Arab Emirates,United Arab Emirates,467.5,15,Gas dominant,2024,AE,
-ap-northeast-1,AWS,"Tokyo, Japan",Japan,477.3,20,Gas + coal mix,2025,JP-TK,
-ap-northeast-2,AWS,"Seoul, South Korea",South Korea,417.1,20,Coal + gas mix,2025,KR,
-ap-northeast-3,AWS,"Osaka, Japan",Japan,477.3,20,Gas + coal mix,2025,JP-KN,
-ap-south-1,AWS,"Mumbai, India",India,670.1,20,Coal dominant,2025,IN-WE,
-ap-southeast-1,AWS,Singapore,Singapore,497.1,15,Gas dominant,2025,SG,
-ap-southeast-2,AWS,"Sydney, Australia",Australia,525.2,25,Coal dominant,2025,AU-NSW,
-ap-southeast-3,AWS,"Jakarta, Indonesia",Indonesia,680.2,15,Coal dominant,2024,ID,
+region,cloud,location,country,avg_carbon_intensity_gco2_per_kwh,diurnal_swing_pct,grid_mix_note,source_year,electricitymaps_zone,uk_carbon_intensity_regionid,watttime_region,entsoe_bidding_zone
+us-east-1,AWS,"N. Virginia, United States",United States,384.4,25,Gas + coal mix,2025,US-MIDA-PJM,,PJM_DC,
+us-east-2,AWS,"Ohio, United States",United States,384.4,25,Gas + coal mix,2025,US-MIDA-PJM,,PJM_OH,
+us-west-1,AWS,"N. California, United States",United States,384.4,30,"Mixed, more renewables regionally",2025,US-CAL-CISO,,CAISO_NORTH,
+us-west-2,AWS,"Oregon, United States",United States,384.4,30,Mixed with growing wind/solar/hydro,2025,US-NW-BPAT,,BPAT,
+ca-central-1,AWS,"Montreal, Canada",Canada,190.7,20,"Hydro + nuclear, some fossil provinces",2025,CA-QC,,,
+eu-west-2,AWS,"London, United Kingdom",United Kingdom,217.4,30,Gas + wind mix,2025,GB,13.0,,10YGB----------A
+eu-central-1,AWS,"Frankfurt, Germany",Germany,329.6,30,Coal + wind mix,2025,DE,,,10Y1001A1001A82H
+eu-north-1,AWS,"Stockholm, Sweden",Sweden,35.3,20,Hydro + nuclear dominant,2025,SE-SE3,,,10Y1001A1001A46L
+eu-south-2,AWS,"Zaragoza, Spain",Spain,153.6,25,Wind + gas mix,2025,ES,,,10YES-REE------0
+me-central-1,AWS,United Arab Emirates,United Arab Emirates,467.5,15,Gas dominant,2024,AE,,,
+ap-northeast-1,AWS,"Tokyo, Japan",Japan,477.3,20,Gas + coal mix,2025,JP-TK,,,
+ap-northeast-2,AWS,"Seoul, South Korea",South Korea,417.1,20,Coal + gas mix,2025,KR,,,
+ap-northeast-3,AWS,"Osaka, Japan",Japan,477.3,20,Gas + coal mix,2025,JP-KN,,,
+ap-south-1,AWS,"Mumbai, India",India,670.1,20,Coal dominant,2025,IN-WE,,,
+ap-southeast-1,AWS,Singapore,Singapore,497.1,15,Gas dominant,2025,SG,,,
+ap-southeast-2,AWS,"Sydney, Australia",Australia,525.2,25,Coal dominant,2025,AU-NSW,,,
+ap-southeast-3,AWS,"Jakarta, Indonesia",Indonesia,680.2,15,Coal dominant,2024,ID,,,

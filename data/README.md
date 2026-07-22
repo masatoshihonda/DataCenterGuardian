@@ -99,9 +99,39 @@ this MVP's pricing pivoted to AWS (see above) once L40S turned out to be
 missing from Azure's public catalog. Worth revisiting if Azure regions
 specifically matter for a future iteration.
 
-WattTime (`api.watttime.org`) and ENTSO-E (`web-api.tp.entsoe.eu`) were
-also requested as additional live carbon sources but are still blocked by
-this environment's network policy as of this writing.
+`scheduler/live_carbon_watttime.py` — **optional, reachable but not fully verified**
+Adds WattTime (US/Canada balancing authorities) as another live source,
+if you supply credentials (env vars `WATTTIME_USERNAME`/`WATTTIME_PASSWORD`
+or `.streamlit/secrets.toml`'s `watttime_username`/`watttime_password`).
+`api.watttime.org` was also unreachable at first; once opened, testing
+with fake credentials caught a real bug before it could ship silently:
+the login endpoint is at `/login`, *not* `/v3/login` — the versioned
+path 302-redirects to WattTime's docs site instead of erroring, which
+would have quietly always fallen back to modeled data with no visible
+failure. Fixed to call the correct endpoint, confirmed with a real `403`
+for bad Basic Auth credentials and a real `401` ("Jwt is not in the form
+of...") for a bad bearer token on `/v3/forecast` — both endpoints and the
+auth handshake are right, but the authenticated forecast payload shape
+is unverified. `watttime_region` mappings in `regions.py` are best-effort
+guesses; `ca-central-1` has none set since WattTime's Quebec coverage
+isn't clearly confirmed.
+
+`scheduler/live_carbon_entsoe.py` — **optional, reachable but not fully verified**
+Adds ENTSO-E (EU bidding zones) as a live source for the four EU-region
+entries, if you supply a security token (env var `ENTSOE_SECURITY_TOKEN`
+or `.streamlit/secrets.toml`'s `entsoe_security_token`). Note this one
+doesn't forecast: ENTSO-E's generation-by-fuel-type document (A75,
+"Realised") is actual historical data, not a future mix, so this client
+fetches the most recent real generation mix, converts it to gCO2/kWh via
+published emission-intensity factors (IPCC AR5 WG3 Annex III, Table
+A.III.2 — cited lifecycle medians, not invented numbers), and uses that
+one real reading to re-anchor the modeled day/night curve's *mean* while
+keeping its illustrative shape. `web-api.tp.entsoe.eu` was also
+unreachable at first; an unauthenticated request with these exact query
+parameters now returns a real, well-formed XML "Authentication failed"
+document, confirming the request shape, but the actual-generation XML
+shape is unverified without a real token. `entsoe_bidding_zone` EIC codes
+in `regions.py` are stable published identifiers, not a guess.
 
 All numbers in this directory are for **relative comparison between
 candidate regions/times**, not an auditable/exact cost or emissions figure —
