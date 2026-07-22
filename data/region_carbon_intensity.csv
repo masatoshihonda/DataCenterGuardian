@@ -1,0 +1,17 @@
+region,cloud,country,avg_carbon_intensity_gco2_per_kwh,diurnal_swing_pct,grid_mix_note
+Sweden Central,Azure,Sweden,25,20,Hydro + nuclear dominant
+Norway East,Azure,Norway,20,15,Hydro dominant
+Switzerland North,Azure,Switzerland,30,20,Hydro + nuclear
+France Central,Azure,France,60,25,Nuclear dominant
+Canada Central,Azure,Canada,35,20,Hydro + nuclear
+Brazil South,Azure,Brazil,95,20,Hydro dominant
+UK South,Azure,United Kingdom,190,30,Gas + wind mix
+West US 2,Azure,United States,270,30,Mixed with growing wind/solar
+West Europe,Azure,Netherlands,300,30,Gas + wind mix
+East US,Azure,United States,380,25,Gas + coal mix
+Germany West Central,Azure,Germany,380,30,Coal + wind mix
+Japan East,Azure,Japan,470,20,Gas + coal mix
+Southeast Asia,Azure,Singapore,420,15,Gas dominant
+Poland Central,Azure,Poland,620,15,Coal dominant
+Central India,Azure,India,700,20,Coal dominant
+Australia East,Azure,Australia,650,25,Coal dominant

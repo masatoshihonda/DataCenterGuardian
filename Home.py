@@ -537,6 +537,37 @@ with col2:
     if st.button("Launch GPU Health Monitor", key="gpuhealth_btn", use_container_width=True):
         st.switch_page("pages/2_GPU_Health.py")
 
+st.markdown("""
+<div class="glass-card">
+    <div class="card-icon green">&#127757;</div>
+    <div class="card-title">
+        GreenGPU Explorer
+        <span class="card-badge badge-infra">Infrastructure</span>
+    </div>
+    <p class="card-description">
+        Carbon- and cost-aware recommender for cloud GPU jobs: given a workload, deadline
+        and GPU count, ranks candidate regions and start times by estimated cost and CO2,
+        using workload power profiles measured from real CUDA/DCGM benchmark runs.
+    </p>
+    <ul class="card-features">
+        <li class="card-feature">
+            <span class="feature-check green">&#10003;</span>
+            Workload-aware power estimates from measured GPU telemetry
+        </li>
+        <li class="card-feature">
+            <span class="feature-check green">&#10003;</span>
+            Region and start-time ranking by cost / carbon / balanced priority
+        </li>
+        <li class="card-feature">
+            <span class="feature-check green">&#10003;</span>
+            Deadline-constrained scheduling, no live infrastructure access required
+        </li>
+    </ul>
+</div>
+""", unsafe_allow_html=True)
+if st.button("Launch GreenGPU Explorer", key="greengpu_explorer_btn", use_container_width=True):
+    st.switch_page("pages/7_GreenGPU_Explorer.py")
+
 # Section 2: AI Assurance & Trust Layer
 st.markdown("""
 <div class="section-header">

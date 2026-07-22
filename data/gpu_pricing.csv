@@ -1,0 +1,49 @@
+region,gpu_model,hourly_usd_per_gpu
+Sweden Central,A100_80GB,3.40
+Sweden Central,H100_80GB,7.20
+Sweden Central,L40S,2.30
+Norway East,A100_80GB,3.35
+Norway East,H100_80GB,7.10
+Norway East,L40S,2.25
+Switzerland North,A100_80GB,3.75
+Switzerland North,H100_80GB,7.85
+Switzerland North,L40S,2.55
+France Central,A100_80GB,3.55
+France Central,H100_80GB,7.45
+France Central,L40S,2.40
+Canada Central,A100_80GB,3.30
+Canada Central,H100_80GB,6.95
+Canada Central,L40S,2.20
+Brazil South,A100_80GB,4.10
+Brazil South,H100_80GB,8.60
+Brazil South,L40S,2.75
+UK South,A100_80GB,3.60
+UK South,H100_80GB,7.55
+UK South,L40S,2.45
+West US 2,A100_80GB,3.20
+West US 2,H100_80GB,6.75
+West US 2,L40S,2.15
+West Europe,A100_80GB,3.50
+West Europe,H100_80GB,7.35
+West Europe,L40S,2.35
+East US,A100_80GB,3.10
+East US,H100_80GB,6.55
+East US,L40S,2.05
+Germany West Central,A100_80GB,3.65
+Germany West Central,H100_80GB,7.65
+Germany West Central,L40S,2.50
+Japan East,A100_80GB,3.90
+Japan East,H100_80GB,8.20
+Japan East,L40S,2.65
+Southeast Asia,A100_80GB,3.45
+Southeast Asia,H100_80GB,7.25
+Southeast Asia,L40S,2.35
+Poland Central,A100_80GB,3.25
+Poland Central,H100_80GB,6.85
+Poland Central,L40S,2.10
+Central India,A100_80GB,2.85
+Central India,H100_80GB,6.05
+Central India,L40S,1.90
+Australia East,A100_80GB,3.95
+Australia East,H100_80GB,8.30
+Australia East,L40S,2.70
