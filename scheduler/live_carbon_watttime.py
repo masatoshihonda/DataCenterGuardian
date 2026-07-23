@@ -3,23 +3,40 @@ WattTime v3 API client (https://www.watttime.org), used in place of the
 modeled diurnal curve for US/Canada regions when the user supplies their
 own WattTime login credentials.
 
-*** Status: reachable but not fully verified. api.watttime.org was
-blocked by this build environment's network policy for most of the
-project; once the allowlist was updated, requests with fake credentials
-confirmed the real request shapes used here: `GET /login` (note: NOT
-under `/v3/`) with HTTP Basic Auth returns a real `403 Forbidden` for bad
-credentials (not a redirect -- an earlier version of this client
-mistakenly pointed at `/v3/login`, which 302-redirects to WattTime's docs
-site instead of erroring, silently masking the bug until tested), and
-`GET /v3/forecast` with a bad bearer token returns a real `401` complaining
-the JWT is malformed -- confirming both endpoints and the auth handshake.
-No real WattTime account was available in this build to obtain valid
-credentials, so the *authenticated* forecast payload shape hasn't been
-checked against real data. If it doesn't match, `fetch_live_forecast`
-raises and the caller falls back to the modeled curve automatically.
+Reads from WattTime's official API docs (docs.watttime.org) caught real
+bugs in an earlier version of this client before it could ship silently
+wrong numbers:
 
-Get free-tier credentials at https://www.watttime.org/get-the-data/, then
-either export them:
+- WattTime's signal is CO2 MOER (Marginal Operating Emissions Rate) in
+  **lbs/MWh**, not gCO2/kWh like every other provider here. An earlier
+  version requested a `co2_aoer` signal (average, not marginal) that
+  never appears anywhere in WattTime's docs -- every documented example
+  uses `co2_moer` -- and didn't convert units at all, which would have
+  silently mixed lbs/MWh values into a gCO2/kWh column. Fixed to request
+  `co2_moer` and convert (1 lb/MWh = 0.453592 gCO2/kWh).
+- MOER (marginal) is a genuinely different quantity from the average
+  grid intensity the other providers (Electricity Maps, UK Carbon
+  Intensity, ENTSO-E) report: it answers "what's the incremental effect
+  of adding one more MW of load right now", not "what's the average
+  carbon intensity of all generation on the grid". WattTime doesn't
+  expose an average-rate forecast on the free/preview tier (their
+  average-rate "AOER" signal, where offered, is a historical/analyst
+  product) -- so treat WattTime numbers here as directionally comparable
+  to the other providers, not identical in kind.
+- `/v3/forecast` and `/v3/historical` require an ANALYST/PRO
+  subscription for most regions; the docs explicitly carve out
+  `region=CAISO_NORTH` as always available for preview without a paid
+  plan. So on a free account, only the region mapped to CAISO_NORTH
+  (us-west-1 here) is expected to actually return data -- the others
+  (PJM_DC, PJM_OH, BPAT) should correctly 403 and fall back to modeled
+  until/unless a paid plan is added.
+- The login endpoint is `/login`, not `/v3/login` (confirmed separately
+  once api.watttime.org became reachable from this build environment --
+  the versioned path silently 302-redirects to WattTime's docs site
+  instead of erroring).
+
+Get free-tier credentials by self-registering via `register_account()` or
+at https://www.watttime.org/get-the-data/, then either export them:
     export WATTTIME_USERNAME=...
     export WATTTIME_PASSWORD=...
 or add `watttime_username` / `watttime_password` to
@@ -31,8 +48,21 @@ import os
 import pandas as pd
 import requests
 
+REGISTER_URL = "https://api.watttime.org/register"
 LOGIN_URL = "https://api.watttime.org/login"  # NOT under /v3/ -- see module docstring
 API_BASE = "https://api.watttime.org/v3"
+
+LBS_PER_MWH_TO_GRAMS_PER_KWH = 0.453592
+
+
+def register_account(username: str, password: str, email: str, org: str | None = None) -> dict:
+    """Self-serve registration -- no email verification required per WattTime's docs."""
+    payload = {"username": username, "password": password, "email": email}
+    if org:
+        payload["org"] = org
+    response = requests.post(REGISTER_URL, json=payload, timeout=15)
+    response.raise_for_status()
+    return response.json()
 
 
 def get_credentials() -> tuple[str, str] | None:
@@ -59,22 +89,22 @@ def _login(username: str, password: str) -> str:
 
 def fetch_live_forecast(region: str, username: str, password: str, hours_ahead: int = 48) -> pd.DataFrame:
     """
-    Real-time + forecast average carbon intensity (co2_aoer signal -- the
-    average, not marginal, operating emissions rate, for comparability
-    with the other providers here) for one WattTime balancing-authority
-    region. Raises on any failure so callers can fall back.
+    Forecast CO2 MOER (marginal operating emissions rate) for one WattTime
+    balancing-authority region, converted from lbs/MWh to gCO2/kWh.
+    Raises on any failure so callers can fall back.
     """
     token = _login(username, password)
+    horizon_hours = max(1, min(int(hours_ahead), 72))  # API caps this at 72
     response = requests.get(
         f"{API_BASE}/forecast",
-        params={"region": region, "signal_type": "co2_aoer"},
+        params={"region": region, "signal_type": "co2_moer", "horizon_hours": horizon_hours},
         headers={"Authorization": f"Bearer {token}"},
         timeout=15,
     )
     response.raise_for_status()
     payload = response.json()
 
-    points = payload.get("data", payload if isinstance(payload, list) else [])
+    points = payload.get("data", [])
     if not points:
         raise ValueError(f"Empty forecast payload for WattTime region {region}")
 
@@ -82,14 +112,15 @@ def fetch_live_forecast(region: str, username: str, password: str, hours_ahead: 
     df["point_time"] = pd.to_datetime(df["point_time"], utc=True)
     now = pd.Timestamp.now(tz="UTC")
 
+    df["carbon_intensity_gco2_per_kwh"] = df["value"] * LBS_PER_MWH_TO_GRAMS_PER_KWH
     df["hours_from_now"] = ((df["point_time"] - now) / pd.Timedelta(hours=1)).round().astype(int)
     df = df[(df["hours_from_now"] >= 0) & (df["hours_from_now"] < hours_ahead)]
     if df.empty:
         raise ValueError(f"No forecast points within {hours_ahead}h for WattTime region {region}")
 
-    return df.rename(columns={"value": "carbon_intensity_gco2_per_kwh"})[
-        ["hours_from_now", "carbon_intensity_gco2_per_kwh"]
-    ].sort_values("hours_from_now").reset_index(drop=True)
+    return df[["hours_from_now", "carbon_intensity_gco2_per_kwh"]].sort_values(
+        "hours_from_now"
+    ).reset_index(drop=True)
 
 
 def hourly_forecast_with_fallback(
