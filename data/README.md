@@ -104,7 +104,7 @@ this MVP's pricing pivoted to AWS (see above) once L40S turned out to be
 missing from Azure's public catalog. Worth revisiting if Azure regions
 specifically matter for a future iteration.
 
-`scheduler/live_carbon_watttime.py` — **optional, reachable but not fully verified**
+`scheduler/live_carbon_watttime.py` — **real data, verified for CAISO_NORTH (us-west-1)**
 Adds WattTime (US/Canada balancing authorities) as another live source,
 if you supply credentials (env vars `WATTTIME_USERNAME`/`WATTTIME_PASSWORD`
 or `.streamlit/secrets.toml`'s `watttime_username`/`watttime_password`).
@@ -113,13 +113,24 @@ with fake credentials caught a real bug before it could ship silently:
 the login endpoint is at `/login`, *not* `/v3/login` — the versioned
 path 302-redirects to WattTime's docs site instead of erroring, which
 would have quietly always fallen back to modeled data with no visible
-failure. Fixed to call the correct endpoint, confirmed with a real `403`
-for bad Basic Auth credentials and a real `401` ("Jwt is not in the form
-of...") for a bad bearer token on `/v3/forecast` — both endpoints and the
-auth handshake are right, but the authenticated forecast payload shape
-is unverified. `watttime_region` mappings in `regions.py` are best-effort
-guesses; `ca-central-1` has none set since WattTime's Quebec coverage
-isn't clearly confirmed.
+failure. A free test account was then self-registered (`register_account()`)
+and, cross-checked against WattTime's official docs, caught two more real
+bugs before any real data was even fetched: the signal requested
+(`co2_aoer`) doesn't appear anywhere in WattTime's docs — every example
+uses `co2_moer` (Marginal Operating Emissions Rate) — and the value is
+reported in **lbs/MWh**, which was never being converted to gCO2/kWh at
+all. Both fixed (switched signal, added the lb→g conversion), then
+verified with the real account: `/v3/forecast?region=CAISO_NORTH` (the
+only region a free account can access, confirmed via `/v3/my-access` —
+exactly as the docs describe) returned real 5-minute-resolution data,
+correctly converted to a plausible ~400-450 gCO2/kWh range. Note MOER
+(marginal) is methodologically a different quantity from the
+average-grid-intensity figures the other providers give — directionally
+comparable, not identical in kind. `us-east-1`/`us-east-2`/`us-west-2`
+(PJM_DC/PJM_OH/BPAT) need a paid ANALYST/PRO plan to verify; on a free
+account they correctly 403 and fall back to modeled. `watttime_region`
+mappings for those three are still best-effort guesses; `ca-central-1`
+has none set since WattTime's Quebec coverage isn't clearly confirmed.
 
 `scheduler/live_carbon_entsoe.py` — **optional, reachable but not fully verified**
 Adds ENTSO-E (EU bidding zones) as a live source for the four EU-region

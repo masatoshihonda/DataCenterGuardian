@@ -48,14 +48,16 @@ with st.expander("🧪 Live carbon data"):
         "forecast. Every other region defaults to a modeled day/night "
         "carbon curve shaped around a real published annual average (see "
         "data/README.md).\n\n"
-        "**Electricity Maps is now verified end-to-end** with a real trial "
-        "API key (confirmed real 24h forecasts across multiple zones). "
-        "WattTime and ENTSO-E below are reachable and their request/"
-        "error-response shapes have been checked, but neither has been "
-        "verified against a real *authenticated* response yet (no free-tier "
-        "account was available for those). Any live fetch that fails for "
-        "any reason silently falls back to the modeled curve for that "
-        "region -- check the 'carbon source' column below to see what was "
+        "**Electricity Maps is verified end-to-end** with a real trial API "
+        "key (confirmed real 24h forecasts across multiple zones), and "
+        "**WattTime is verified for us-west-1/CAISO_NORTH** (a free "
+        "account only gets that one region -- the others need a paid "
+        "plan and will correctly fall back to modeled until then). "
+        "ENTSO-E below is reachable and its request/error-response shape "
+        "has been checked, but not yet verified against a real "
+        "*authenticated* response. Any live fetch that fails for any "
+        "reason silently falls back to the modeled curve for that region "
+        "-- check the 'carbon source' column below to see what was "
         "actually used for each row."
     )
 
@@ -69,7 +71,10 @@ with st.expander("🧪 Live carbon data"):
         electricitymaps_api_key = api_key_input or None
 
     with col_wt:
-        st.caption("[WattTime](https://www.watttime.org/get-the-data/) (US/Canada regions)")
+        st.caption(
+            "[WattTime](https://www.watttime.org/get-the-data/) (US/Canada regions) "
+            "-- verified for CAISO_NORTH (us-west-1) on a free account"
+        )
         wt_creds = live_carbon_watttime.get_credentials()
         wt_username = st.text_input("Username", value=(wt_creds[0] if wt_creds else ""), key="wt_user")
         wt_password = st.text_input(

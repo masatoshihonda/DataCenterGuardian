@@ -3,7 +3,20 @@ WattTime v3 API client (https://www.watttime.org), used in place of the
 modeled diurnal curve for US/Canada regions when the user supplies their
 own WattTime login credentials.
 
-Reads from WattTime's official API docs (docs.watttime.org) caught real
+*** Status: real data, verified for CAISO_NORTH (us-west-1). A free
+test account was self-registered via `register_account()` and, once its
+email was confirmed, `fetch_live_forecast('CAISO_NORTH', ...)` returned
+real 5-minute-resolution MOER data (`/v3/my-access` confirmed this free
+account's only entitlement is CAISO_NORTH, exactly as the docs describe)
+-- correctly converted from lbs/MWh to gCO2/kWh, values in the ~400-450
+gCO2/kWh range with some brief near-zero dips (plausible: California's
+marginal generator briefly becomes a near-zero-emission source at
+times, e.g. curtailed solar). us-east-1/us-east-2/us-west-2 (PJM_DC,
+PJM_OH, BPAT) still need an ANALYST/PRO subscription to verify -- on
+this free account they correctly return 403 and fall back to modeled,
+per the priority-chain design below.
+
+Reading WattTime's official API docs (docs.watttime.org) caught real
 bugs in an earlier version of this client before it could ship silently
 wrong numbers:
 
