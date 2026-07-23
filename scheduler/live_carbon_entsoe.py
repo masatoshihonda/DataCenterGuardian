@@ -21,17 +21,23 @@ annual average) with what the grid is actually doing right now. This
 doesn't account for cross-border imports/exports into the bidding zone,
 only in-zone generation.
 
-*** Status: reachable but not fully verified. web-api.tp.entsoe.eu was
-blocked by this build environment's network policy for most of the
-project; once the allowlist was updated, an unauthenticated request
-(with the exact document/process/domain/period query parameters used
-here) returned a real, well-formed XML "Authentication failed"
-acknowledgement document -- confirming the request shape is right -- but
-no ENTSO-E account was available in this build to obtain a real security
-token, so the actual generation-data XML shape has not been checked
-against a real response. If it doesn't parse as expected,
-`fetch_current_carbon_intensity` raises and the caller falls back to the
-plain modeled curve automatically.
+*** Status: real data, verified. web-api.tp.entsoe.eu was blocked by
+this build environment's network policy for most of the project; once
+the allowlist was updated, a real security token was tried against it
+and caught one real bug immediately: the domain parameter for A75/A16
+is `in_Domain`, not `outBiddingZone_Domain` (the latter returned a
+well-formed "Mandatory parameter In_Domain is missing" error -- useful
+confirmation that auth itself was fine, just the wrong query param
+name). Fixed, then confirmed with real generation-mix XML for Sweden
+(`10Y1001A1001A46L`) -- e.g. ~5-9 MW of gas against ~900-1000 MW of
+hydro at the time of the test, consistent with Sweden's real generation
+mix -- and `fetch_current_carbon_intensity` computed a plausible ~70-80
+gCO2/kWh from it. Re-ran the full optimizer too: eu-north-1,
+eu-central-1 and eu-south-2 all correctly returned
+`"live:entsoe (current, modeled shape)"` with real, region-differentiated
+values. If the XML ever doesn't parse as expected,
+`fetch_current_carbon_intensity` still raises and the caller falls back
+to the plain modeled curve automatically.
 
 Request a free token by emailing transparency@entsoe.eu from your
 registered platform account (see their API docs), then either export it:
@@ -104,7 +110,7 @@ def fetch_current_carbon_intensity(bidding_zone: str, security_token: str) -> fl
             "securityToken": security_token,
             "documentType": "A75",
             "processType": "A16",
-            "outBiddingZone_Domain": bidding_zone,
+            "in_Domain": bidding_zone,
             "periodStart": period_start,
             "periodEnd": period_end,
         },

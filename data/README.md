@@ -132,7 +132,7 @@ account they correctly 403 and fall back to modeled. `watttime_region`
 mappings for those three are still best-effort guesses; `ca-central-1`
 has none set since WattTime's Quebec coverage isn't clearly confirmed.
 
-`scheduler/live_carbon_entsoe.py` — **optional, reachable but not fully verified**
+`scheduler/live_carbon_entsoe.py` — **real data, verified**
 Adds ENTSO-E (EU bidding zones) as a live source for the four EU-region
 entries, if you supply a security token (env var `ENTSOE_SECURITY_TOKEN`
 or `.streamlit/secrets.toml`'s `entsoe_security_token`). Note this one
@@ -143,10 +143,16 @@ published emission-intensity factors (IPCC AR5 WG3 Annex III, Table
 A.III.2 — cited lifecycle medians, not invented numbers), and uses that
 one real reading to re-anchor the modeled day/night curve's *mean* while
 keeping its illustrative shape. `web-api.tp.entsoe.eu` was also
-unreachable at first; an unauthenticated request with these exact query
-parameters now returns a real, well-formed XML "Authentication failed"
-document, confirming the request shape, but the actual-generation XML
-shape is unverified without a real token. `entsoe_bidding_zone` EIC codes
+unreachable at first; once a real security token was obtained, it caught
+a real bug immediately: the domain parameter for A75/A16 is `in_Domain`,
+not `outBiddingZone_Domain` (confirmed by a well-formed "Mandatory
+parameter In_Domain is missing" response — auth itself was fine, just
+the wrong query param name). Fixed, then confirmed with real generation
+data for Sweden (small gas output, ~900-1000 MW hydro — consistent with
+Sweden's actual grid mix) yielding a plausible ~70-80 gCO2/kWh. The full
+optimizer pipeline was re-run too: eu-north-1, eu-central-1 and
+eu-south-2 all correctly returned real, region-differentiated values via
+`"live:entsoe (current, modeled shape)"`. `entsoe_bidding_zone` EIC codes
 in `regions.py` are stable published identifiers, not a guess.
 
 All numbers in this directory are for **relative comparison between

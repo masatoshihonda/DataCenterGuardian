@@ -48,17 +48,17 @@ with st.expander("🧪 Live carbon data"):
         "forecast. Every other region defaults to a modeled day/night "
         "carbon curve shaped around a real published annual average (see "
         "data/README.md).\n\n"
-        "**Electricity Maps is verified end-to-end** with a real trial API "
-        "key (confirmed real 24h forecasts across multiple zones), and "
-        "**WattTime is verified for us-west-1/CAISO_NORTH** (a free "
-        "account only gets that one region -- the others need a paid "
-        "plan and will correctly fall back to modeled until then). "
-        "ENTSO-E below is reachable and its request/error-response shape "
-        "has been checked, but not yet verified against a real "
-        "*authenticated* response. Any live fetch that fails for any "
-        "reason silently falls back to the modeled curve for that region "
-        "-- check the 'carbon source' column below to see what was "
-        "actually used for each row."
+        "**All four live providers are now verified with real data.** "
+        "Electricity Maps confirmed real 24h forecasts across multiple "
+        "zones; WattTime confirmed real data for us-west-1/CAISO_NORTH "
+        "(a free account only gets that one region -- the others need a "
+        "paid plan and correctly fall back to modeled); ENTSO-E confirmed "
+        "a real generation mix for the EU zones, used to re-anchor the "
+        "modeled curve's current value (it doesn't forecast -- see "
+        "`scheduler/live_carbon_entsoe.py`). Any live fetch that still "
+        "fails for any reason silently falls back to the modeled curve "
+        "for that region -- check the 'carbon source' column below to "
+        "see what was actually used for each row."
     )
 
     col_em, col_wt, col_entsoe = st.columns(3)
@@ -83,7 +83,10 @@ with st.expander("🧪 Live carbon data"):
         watttime_credentials = (wt_username, wt_password) if wt_username and wt_password else None
 
     with col_entsoe:
-        st.caption("[ENTSO-E](https://transparency.entsoe.eu) (EU regions, current-value anchor only)")
+        st.caption(
+            "[ENTSO-E](https://transparency.entsoe.eu) (EU regions, current-value "
+            "anchor only) -- verified"
+        )
         entsoe_token_input = st.text_input(
             "Security token",
             value=live_carbon_entsoe.get_security_token() or "",
