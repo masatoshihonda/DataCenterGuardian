@@ -75,22 +75,27 @@ kind of temporal/regional signal a national average can't capture.
 `uk_carbon_intensity_regionid` set, before falling back further down the
 chain.
 
-`scheduler/live_carbon.py` — **optional, reachable but not fully verified**
+`scheduler/live_carbon.py` — **real data, verified**, needs your own API key
 An Electricity Maps v3 client that can replace the modeled diurnal curve
-with live/forecast carbon intensity for every other region, if you supply
-your own API key (env var `ELECTRICITYMAPS_API_KEY` or
+with live/forecast carbon intensity for any region, if you supply your
+own API key (env var `ELECTRICITYMAPS_API_KEY` or
 `.streamlit/secrets.toml`'s `electricitymaps_api_key`). `api.electricitymap.org`
-was also unreachable at first and opened up along with the UK host above —
-an unauthenticated request now gets a real `401` back (confirming the
-endpoint and request path are right), but no free-tier key was available
-in this build to verify the authenticated response shape end-to-end.
-Falls back to the modeled curve automatically on any failure (missing
-key, network error, unexpected response shape); the app's "carbon
-source" column shows exactly what was used per region. The per-region
-`electricitymaps_zone` mapping in `regions.py` is a best-effort guess —
-several countries here have multiple grid zones and AWS doesn't publish
-which one actually feeds a given data center, so treat it as a starting
-point to double-check once you have a real key.
+was unreachable at first and opened up along with the UK host above; once
+a real trial API key (full-zone access) was tried against it, the client
+correctly pulled real 24h forecasts for multiple zones (Sweden, Tokyo,
+US-PJM among others) with the exact response shape this code expects.
+A separate, more restricted key (Electricity Maps' free Home Assistant
+integration tier, scoped to a single zone/endpoint) was also tried and
+correctly failed closed with a clear `401` rather than misbehaving —
+useful confirmation that auth failures are handled safely, not just that
+success is. Falls back to the modeled curve automatically on any failure
+(missing key, network error, unexpected response shape); the app's
+"carbon source" column shows exactly what was used per region. The
+per-region `electricitymaps_zone` mapping in `regions.py` is still a
+best-effort guess (several countries have multiple grid zones and AWS
+doesn't publish which one actually feeds a given data center) — the keys
+tried so far happened to only exercise a handful of these zones, so most
+remain unverified individually.
 
 `prices.azure.com` is also now reachable from this build environment
 (confirmed with a real `200` response), which reopens the originally

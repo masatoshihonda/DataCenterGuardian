@@ -3,18 +3,19 @@ Optional live carbon-intensity feed via the Electricity Maps v3 API
 (https://api.electricitymap.org/v3), used in place of the synthetic
 diurnal curve in scheduler/carbon.py when an API key is configured.
 
-*** Status: written against Electricity Maps' documented public API
-contract, but not executable-verified. This project's build/dev sandbox
-blocks outbound connections to api.electricitymap.org at the network
-policy level (every request gets a 403 on the CONNECT itself, before any
-auth check happens) -- so this code has never actually round-tripped a
-real request or seen a real response body. It should work as written
-once run from an environment with normal internet access and a real
-free-tier API key (https://www.electricitymaps.com/free-tier), but treat
-that as unverified until you've tried it. If the response shape has
-drifted from what's implemented here, `fetch_live_forecast` will raise
-and the caller falls back to the modeled curve automatically -- it won't
-silently return wrong numbers.
+*** Status: real data, verified. api.electricitymap.org was blocked by
+this project's build sandbox for most of development; once the
+environment's network allowlist was updated, this client was confirmed
+against a real trial API key with full-zone access -- `fetch_live_forecast`
+successfully pulled real 24h forecasts for multiple zones (Sweden, Tokyo,
+US-PJM among others) with the exact response shape assumed here. (An
+earlier test with a different, more restricted key -- a Home Assistant
+integration key scoped to a single zone/endpoint -- correctly failed
+closed with a clear 401 rather than silently misbehaving, which is its
+own useful confirmation that auth failures are handled safely.) If the
+response shape ever drifts, `fetch_live_forecast` still raises and the
+caller falls back to the modeled curve automatically -- it won't silently
+return wrong numbers.
 
 Get a key, then either export it:
     export ELECTRICITYMAPS_API_KEY=...

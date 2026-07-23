@@ -48,19 +48,21 @@ with st.expander("🧪 Live carbon data"):
         "forecast. Every other region defaults to a modeled day/night "
         "carbon curve shaped around a real published annual average (see "
         "data/README.md).\n\n"
-        "The keyed providers below are reachable from this deployment and "
-        "their request/error-response shapes have been checked, but none "
-        "have been verified against a real *authenticated* response (no "
-        "free-tier account was available in this build) -- if a live "
-        "fetch fails for any reason it silently falls back to the modeled "
-        "curve for that region. Check the 'carbon source' column below to "
-        "see what was actually used for each row."
+        "**Electricity Maps is now verified end-to-end** with a real trial "
+        "API key (confirmed real 24h forecasts across multiple zones). "
+        "WattTime and ENTSO-E below are reachable and their request/"
+        "error-response shapes have been checked, but neither has been "
+        "verified against a real *authenticated* response yet (no free-tier "
+        "account was available for those). Any live fetch that fails for "
+        "any reason silently falls back to the modeled curve for that "
+        "region -- check the 'carbon source' column below to see what was "
+        "actually used for each row."
     )
 
     col_em, col_wt, col_entsoe = st.columns(3)
 
     with col_em:
-        st.caption("[Electricity Maps](https://www.electricitymaps.com/free-tier) (any region)")
+        st.caption("[Electricity Maps](https://www.electricitymaps.com/free-tier) (any region) -- verified")
         api_key_input = st.text_input(
             "API key", value=live_carbon.get_api_key() or "", type="password", key="em_key",
         )
